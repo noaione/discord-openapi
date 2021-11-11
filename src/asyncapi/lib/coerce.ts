@@ -63,7 +63,11 @@ function messageFromRoute(route: PathItemObject, routeName: string, opName?: str
     if (!post) {
         throw new Error(`Missing POST data for route ${routeName}!`);
     }
-    const parsedTags = [];
+    // @ts-ignore
+    const schematics = post?.responses["200"]?.content["application/json"].schema
+    const parsedTags: {
+        name: string
+    }[] = [];
     if (post.tags) {
         post.tags.forEach(tag => {
             parsedTags.push({
@@ -71,6 +75,8 @@ function messageFromRoute(route: PathItemObject, routeName: string, opName?: str
             });
         });
     }
+    const coercedData = coerceSchemaFormatting(schematics);
+    coercedData.description = "Event data or payload";
     const message = {
         name: opName || post.operationId,
         summary: route.description || "",
@@ -83,10 +89,7 @@ function messageFromRoute(route: PathItemObject, routeName: string, opName?: str
                     description: "opcode for the payload",
                     enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 },
-                d: {
-                    type: "object",
-                    description: "Event data or the payload",
-                },
+                d: coercedData,
                 s: {
                     type: "integer",
                     oneOf: [
@@ -117,19 +120,6 @@ function messageFromRoute(route: PathItemObject, routeName: string, opName?: str
         // @ts-ignore
         message.payload.properties.t["default"] = opName;
         message.title = formatCaseOp(opName) + " Event";
-    }
-    // @ts-ignore
-    const schematics = post?.responses["200"]?.content["application/json"].schema
-    if (schematics) {
-        if (schematics["$ref"]) {
-            // @ts-ignore
-            message.payload.properties.d["additionalProperties"] = {};
-            // @ts-ignore
-            message.payload.properties.d["additionalProperties"]["$ref"] = schematics["$ref"];
-        } else {
-            // @ts-ignore
-            message.payload.properties.d["properties"] = coerceSchemaFormatting(schematics);
-        }
     }
     return message;
 }
@@ -177,12 +167,16 @@ export function coerceDiscordOA3(oas3Document: OpenApiV3): AsyncAPISchema {
             securitySchemes: {
                 token: {
                     type: "httpApiKey",
-                    name: "token",
+                    name: "Authorization",
                     in: "header"
                 }
             },
         },
         defaultContentType: "application/json",
+        externalDocs: {
+            url: "https://discord.com/developers/docs/intro",
+            description: "Discord Developer Documentation"
+        }
     }
     const channels = {
         "/": {

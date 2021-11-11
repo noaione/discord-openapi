@@ -63,4 +63,5 @@ export interface AsyncAPISchema {
     defaultContentType?: string;
     channels: {[key: string]: any};
     components?: AAPIComponentsObject;
+    externalDocs?: AAPIExternalDocumentationObject;
 }
