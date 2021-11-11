@@ -20,8 +20,7 @@ import "./routes";
  * - v8 (Gateway API v8) - Active (Not recommended)
  * - v9 (Gateway API v9) - Active (Recommended)
  * 
- * @oaSchemaProp id
- * urn:com:discord:gateway
+ * If you want to see documentation for the API? Click [here](/).
  */
 @api({ name: "Discord Gateway API", version: "v9-1.0.0" })
 class DiscordGatewayAPI {

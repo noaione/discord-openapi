@@ -24,6 +24,8 @@ import "./routes/index";
  * 
  * You can use client like [Insomnia](https://insomnia.rest/) to request the API.<br>
  * Since you cannot use this website to do it because of CORS (and I'm not planning to circumvent it).
+ * 
+ * If you want to see documentation for the Gateway? Click [here](/gateway).
  */
 @api({
     name: "Discord API",
