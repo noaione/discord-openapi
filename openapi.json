@@ -1,0 +1,970 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Discord API",
+        "description": "**This is a custom OpenAPI 3.0 compatible schemas for Discord API.**\n\nIt's mainly made because looking at the documentation is very hard and confusing sometimes.\nSo some people might just want to use OAPI schema to look or even generate\nthe code for their own API client.\n\nMaintaned by [N4O#8868](https://github.com/noaione/discord-openapi).<br>\nThis project is not affiliated with Discord whatsoever.\n\nPlease report issue at: [https://github.com/noaione/discord-openapi](https://github.com/noaione/discord-openapi)\n\nAPI Version:\n- v6 (Discord API v6) - Deprecated **[Default]**\n- v8 (Discord API v8) - Active (Not recommended)\n- v9 (Discord API v9) - Active (Recommended)\n\nYou can use client like [Insomnia](https://insomnia.rest/) to request the API.<br>\nSince you cannot use this website to do it because of CORS (and I'm not planning to circumvent it).",
+        "version": "v9-1.0.0"
+    },
+    "paths": {
+        "/guilds": {
+            "post": {
+                "tags": [
+                    "Guilds"
+                ],
+                "description": "Create a new guild. Returns a guild object on success.\n\nThis action will fires a GUILD_CREATE Gateway event.\n\nhttps://discord.com/developers/docs/resources/guild#create-guild",
+                "operationId": "PostGuilds",
+                "parameters": [
+                    {
+                        "name": "User-Agent",
+                        "in": "header",
+                        "description": "The user agent of the client. You must follow this format.\nWhere the user agent format is `DiscordBot ($url, $version)`.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "DiscordBot (https://github.com/noaione/discord-openapi, 1.0)"
+                            ]
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/POSTGuildCreation"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guild object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuildHTTPObject"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request, invalid icon image format",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/guilds/{guildId}/audit-logs": {
+            "get": {
+                "tags": [
+                    "Guilds"
+                ],
+                "description": "Returns an audit log object for the guild.\nRequires the 'VIEW_AUDIT_LOG' permission.\n\nhttps://discord.com/developers/docs/resources/audit-log#get-guild-audit-log",
+                "operationId": "GetGuildAuditLogs",
+                "parameters": [
+                    {
+                        "name": "guildId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "Filter the log for actions made by user.",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    {
+                        "name": "action_type",
+                        "in": "query",
+                        "description": "The type of audit log event.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Filter the log before certain entry ID.",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The limit that the API should return.\nMinimum of 1, and maximum of 100",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 50
+                        }
+                    },
+                    {
+                        "name": "User-Agent",
+                        "in": "header",
+                        "description": "The user agent of the client. You must follow this format.\nWhere the user agent format is `DiscordBot ($url, $version)`.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "DiscordBot (https://github.com/noaione/discord-openapi, 1.0)"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Audit log object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuditLogResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, your provided token is missing some permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You're trying to fetch an unknown guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "B64StringFile": {
+                "type": "string",
+                "description": "A base64 encoded file"
+            },
+            "VerificationLevel": {
+                "type": "integer",
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "format": "int32",
+                "description": "The verification level of the guild.\n0 is none, 1 is low, 2 is medium, 3 is high, 4 is very high."
+            },
+            "MessageNotificationLevel": {
+                "type": "integer",
+                "enum": [
+                    0,
+                    1
+                ],
+                "format": "int32",
+                "description": "The default message notification level of the guild.\n0 is all messages, 1 is only mentions."
+            },
+            "ExplicitContentFilterLevel": {
+                "type": "integer",
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
+                "format": "int32",
+                "description": "The default explicit content filter level of the guild.\n0 is disabled, 1 is members without roles, 2 is everyone."
+            },
+            "GuildRoleBody": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "default": "new role",
+                        "description": "Name of the role"
+                    },
+                    "color": {
+                        "type": "number",
+                        "format": "float",
+                        "default": 0,
+                        "description": "RGB color value"
+                    },
+                    "hoist": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Whether the role should be displayed separately in the sidebar"
+                    },
+                    "icon": {
+                        "$ref": "#/components/schemas/B64StringFile",
+                        "nullable": true
+                    },
+                    "unicode_emoji": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The role's unicode emoji as a standard emoji (if the guild has the ROLE_ICONS feature)"
+                    },
+                    "permissions": {
+                        "type": "string",
+                        "description": "Bitwise value of the enabled/disabled permissions."
+                    },
+                    "mentionable": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Whether the role should be mentionable."
+                    }
+                }
+            },
+            "ChannelType": {
+                "type": "integer",
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    10,
+                    11,
+                    12,
+                    13
+                ],
+                "format": "int32"
+            },
+            "Snowflake": {
+                "type": "string",
+                "description": "A snowflake or ID for identifying unique object in Discord."
+            },
+            "VideoQualityMode": {
+                "type": "integer",
+                "enum": [
+                    1,
+                    2
+                ],
+                "format": "int32"
+            },
+            "ThreadArchive": {
+                "type": "integer",
+                "enum": [
+                    60,
+                    1440,
+                    4320,
+                    10080
+                ],
+                "format": "int32"
+            },
+            "ChannelGuildMessageBody": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The channel name."
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/ChannelType"
+                    },
+                    "position": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "The position of the channel in a guild."
+                    },
+                    "topic": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The topic of the channel."
+                    },
+                    "nsfw": {
+                        "type": "boolean",
+                        "description": "Is the channel NSFW-restricted or not."
+                    },
+                    "rate_limit_per_user": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Slowmode of the channel."
+                    },
+                    "bitrate": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "The bitrate of the voice/stage channel."
+                    },
+                    "user_limit": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "The user limit of the voice channel"
+                    },
+                    "permission_overwrites": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Explicit permission overwrites for members and roles"
+                    },
+                    "parent_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "rtc_region": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Voice region id for the voice channel, automatic when set to null."
+                    },
+                    "video_quality_mode": {
+                        "$ref": "#/components/schemas/VideoQualityMode"
+                    },
+                    "default_auto_archive_duration": {
+                        "$ref": "#/components/schemas/ThreadArchive"
+                    }
+                },
+                "required": [
+                    "type"
+                ]
+            },
+            "POSTGuildCreation": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 100,
+                        "description": "Name of the guild (2-100 characters)"
+                    },
+                    "region": {
+                        "type": "string",
+                        "deprecated": true,
+                        "description": "Voice region ID (Replaced with channel.rtc_region)"
+                    },
+                    "icon": {
+                        "$ref": "#/components/schemas/B64StringFile"
+                    },
+                    "verification_level": {
+                        "$ref": "#/components/schemas/VerificationLevel"
+                    },
+                    "default_message_notifications": {
+                        "$ref": "#/components/schemas/MessageNotificationLevel"
+                    },
+                    "explicit_content_filter": {
+                        "$ref": "#/components/schemas/ExplicitContentFilterLevel"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GuildRoleBody"
+                        },
+                        "description": "New guild roles\nIf this is provided, the first role permission will be used for the @everyone role."
+                    },
+                    "channels": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ChannelGuildMessageBody"
+                        },
+                        "description": "New guild channels.\nIf provided, the default channels will not be created."
+                    },
+                    "afk_channel_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "afk_timeout": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "AFK timeout in seconds"
+                    },
+                    "system_channel_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "system_channel_flags": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "This is the combined bitwise value of the system channel flags."
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "GuildFeatures": {
+                "type": "string",
+                "enum": [
+                    "ANIMATED_BANNER",
+                    "ANIMATED_ICON",
+                    "BANNER",
+                    "COMMERCE",
+                    "COMMUNITY",
+                    "DISCOVERABLE",
+                    "FEATURABLE",
+                    "INVITE_SPLASH",
+                    "MEMBER_VERIFICATION_GATE_ENABLED",
+                    "MONETIZATION_ENABLED",
+                    "MORE_EMOJI",
+                    "MORE_STICKERS",
+                    "NEWS",
+                    "PARTNERED",
+                    "PREVIEW_ENABLED",
+                    "PRIVATE_THREADS",
+                    "ROLE_ICONS",
+                    "SEVEN_DAY_THREAD_ARCHIVE",
+                    "THREE_DAY_THREAD_ARCHIVE",
+                    "TICKETED_EVENTS_ENABLED",
+                    "VANITY_URL",
+                    "VERIFIED",
+                    "VIP_REGIONS",
+                    "WELCOME_SCREEN_ENABLED"
+                ],
+                "description": "Guild features, if the guild have one of this features,\nthat means the guild have it enabled or available."
+            },
+            "MFALevel": {
+                "type": "integer",
+                "enum": [
+                    0,
+                    1
+                ],
+                "format": "int32",
+                "description": "Guild MFA level needed for user to join.\n0 means none, 1 means elevated/needed."
+            },
+            "SystemChannelFlags": {
+                "type": "integer",
+                "enum": [
+                    1,
+                    2,
+                    4,
+                    8
+                ],
+                "format": "int32",
+                "description": "Supress some system channels messages.\n1 will disable member join notification,\n2 will disable server boost notification,\n4 will disable server setup tips\n8 will hide member join sticker reply actions."
+            },
+            "PremiumTier": {
+                "type": "integer",
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3
+                ],
+                "format": "int32",
+                "description": "Current boost level of the guild.\n0 means none, 1 means level 1, 2 means level 2, etc."
+            },
+            "NSFWLevel": {
+                "type": "integer",
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3
+                ],
+                "format": "int32",
+                "description": "The NSFW level of the guild\n0 means default level, 1 means explicit content only,\n2 means safe, 3 means age restricted."
+            },
+            "GuildHTTPObject": {
+                "type": "object",
+                "properties": {
+                    "owner": {
+                        "type": "boolean"
+                    },
+                    "permissions": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "icon_hash": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "splash": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "discovery_splash": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "owner_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "region": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "afk_channel_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "afk_timeout": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "widget_enabled": {
+                        "type": "boolean"
+                    },
+                    "widget_channel_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "verification_level": {
+                        "$ref": "#/components/schemas/VerificationLevel"
+                    },
+                    "default_message_notifications": {
+                        "$ref": "#/components/schemas/MessageNotificationLevel"
+                    },
+                    "explicit_content_filter": {
+                        "$ref": "#/components/schemas/ExplicitContentFilterLevel"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    "emojis": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GuildFeatures"
+                        }
+                    },
+                    "mfa_level": {
+                        "$ref": "#/components/schemas/MFALevel"
+                    },
+                    "application_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "system_channel_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "system_channel_flags": {
+                        "$ref": "#/components/schemas/SystemChannelFlags"
+                    },
+                    "rules_channel_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "max_presences": {
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "max_members": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "vanity_url_code": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "banner": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "premium_tier": {
+                        "$ref": "#/components/schemas/PremiumTier"
+                    },
+                    "premium_subscription_count": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "preferred_locale": {
+                        "type": "string"
+                    },
+                    "public_updates_channel_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "max_video_channel_users": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "approximate_member_count": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "approximate_presence_count": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "welcome_screen": {
+                        "type": "string"
+                    },
+                    "nsfw_level": {
+                        "$ref": "#/components/schemas/NSFWLevel"
+                    },
+                    "stickers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "icon",
+                    "splash",
+                    "discovery_splash",
+                    "owner_id",
+                    "afk_channel_id",
+                    "afk_timeout",
+                    "verification_level",
+                    "default_message_notifications",
+                    "explicit_content_filter",
+                    "roles",
+                    "emojis",
+                    "features",
+                    "mfa_level",
+                    "application_id",
+                    "system_channel_id",
+                    "system_channel_flags",
+                    "rules_channel_id",
+                    "vanity_url_code",
+                    "description",
+                    "banner",
+                    "premium_tier",
+                    "preferred_locale",
+                    "public_updates_channel_id",
+                    "max_video_channel_users",
+                    "approximate_member_count",
+                    "approximate_presence_count",
+                    "welcome_screen",
+                    "nsfw_level",
+                    "stickers"
+                ]
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "The error code of the error."
+                    },
+                    "errors": {
+                        "type": "object",
+                        "description": "The more detailed information of where the error occurred.\nUsually it's the fault in your request body."
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "The error message."
+                    }
+                },
+                "required": [
+                    "code",
+                    "errors",
+                    "message"
+                ]
+            },
+            "PartialRoleObject": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The role name."
+                    }
+                }
+            },
+            "AuditLogChangeKey": {
+                "type": "string",
+                "enum": [
+                    "afk_channel_id",
+                    "afk_timeout",
+                    "allow",
+                    "deny",
+                    "application_id",
+                    "archived",
+                    "asset",
+                    "auto_archive_duration",
+                    "available",
+                    "avatar_hash",
+                    "banner_hash",
+                    "bitrate",
+                    "channel_id",
+                    "code",
+                    "color",
+                    "deaf",
+                    "default_auto_archive_duration",
+                    "default_message_notifications",
+                    "description",
+                    "discovery_splash_hash",
+                    "enable_emoticons",
+                    "expire_behavior",
+                    "expire_grace_period",
+                    "explicit_content_filter",
+                    "format_type",
+                    "guild_id",
+                    "hoist",
+                    "icon_hash",
+                    "id",
+                    "inviter_id",
+                    "locked",
+                    "max_age",
+                    "max_uses",
+                    "mentionable",
+                    "mfa_level",
+                    "mute",
+                    "name",
+                    "nick",
+                    "nsfw",
+                    "owner_id",
+                    "permission_overwrites",
+                    "permissions",
+                    "position",
+                    "preferred_locale",
+                    "privacy_level",
+                    "prune_delete_days",
+                    "public_updates_channel_id",
+                    "rate_limit_per_user",
+                    "region",
+                    "rules_channel_id",
+                    "splash_hash",
+                    "system_channel_id",
+                    "tags",
+                    "temporary",
+                    "topic",
+                    "type",
+                    "unicode_emoji",
+                    "user_limit",
+                    "uses",
+                    "vanity_url_code",
+                    "verification_level",
+                    "widget_channel_id",
+                    "widget_enabled",
+                    "$add",
+                    "$remove"
+                ]
+            },
+            "AuditLogChange": {
+                "type": "object",
+                "properties": {
+                    "new_value": {
+                        "nullable": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "number",
+                                "format": "float"
+                            },
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Snowflake"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/PartialRoleObject"
+                                }
+                            }
+                        ],
+                        "description": "The new value of the key"
+                    },
+                    "old_value": {
+                        "nullable": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "number",
+                                "format": "float"
+                            },
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Snowflake"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/PartialRoleObject"
+                                }
+                            }
+                        ],
+                        "description": "The old value of the key"
+                    },
+                    "key": {
+                        "$ref": "#/components/schemas/AuditLogChangeKey"
+                    }
+                },
+                "required": [
+                    "key"
+                ]
+            },
+            "AuditLogChangeOptional": {
+                "type": "object",
+                "properties": {
+                    "channel_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "count": {
+                        "type": "string",
+                        "description": "Numbers of entities that are targeted."
+                    },
+                    "delete_member_days": {
+                        "type": "string",
+                        "description": "Numbers of days after which inactive members were kicked"
+                    },
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "members_removed": {
+                        "type": "string",
+                        "description": "Number of members removed by the prune"
+                    },
+                    "message_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "role_name": {
+                        "type": "string",
+                        "description": "Name of the role if type is \"0\" (not present if type is \"1\")"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "0",
+                            "1"
+                        ],
+                        "description": "Type of overwritten entity - \"0\" for \"role\" or \"1\" for \"member\""
+                    }
+                }
+            },
+            "AuditLogEntry": {
+                "type": "object",
+                "properties": {
+                    "target_id": {
+                        "type": "string",
+                        "description": "ID of the affected entity (webhook, user, role, etc.)"
+                    },
+                    "changes": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AuditLogChange"
+                        },
+                        "description": "Changes made into target_id"
+                    },
+                    "user_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "action_type": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Type of action that occured.\nhttps://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events"
+                    },
+                    "options": {
+                        "$ref": "#/components/schemas/AuditLogChangeOptional",
+                        "nullable": true
+                    },
+                    "reason": {
+                        "type": "string",
+                        "description": "The reason for the changes."
+                    }
+                }
+            },
+            "AuditLogResponse": {
+                "type": "object",
+                "properties": {
+                    "audit_log_entries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AuditLogEntry"
+                        },
+                        "description": "List of audit log entries."
+                    }
+                },
+                "required": [
+                    "audit_log_entries"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "SecurityHeader": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization"
+            }
+        }
+    },
+    "security": [
+        {
+            "SecurityHeader": []
+        }
+    ],
+    "servers": [
+        {
+            "url": "https://discord.com/api/{apiVersion}",
+            "description": "The main endpoint for Discord API",
+            "variables": {
+                "apiVersion": {
+                    "default": "v9",
+                    "enum": [
+                        "v6",
+                        "v8",
+                        "v9"
+                    ]
+                }
+            }
+        },
+        {
+            "url": "https://canary.discord.com/api/{apiVersion}",
+            "description": "The canary endpoint for Discord API",
+            "variables": {
+                "apiVersion": {
+                    "default": "v9",
+                    "enum": [
+                        "v6",
+                        "v8",
+                        "v9"
+                    ]
+                }
+            }
+        }
+    ]
+}

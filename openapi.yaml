@@ -29,12 +29,25 @@ info:
     - v8 (Discord API v8) - Active (Not recommended)
 
     - v9 (Discord API v9) - Active (Recommended)
+
+
+    You can use client like [Insomnia](https://insomnia.rest/) to request the
+    API.<br>
+
+    Since you cannot use this website to do it because of CORS (and I'm not
+    planning to circumvent it).
   version: v9-1.0.0
 paths:
   /guilds:
     post:
       tags:
         - Guilds
+      description: |-
+        Create a new guild. Returns a guild object on success.
+
+        This action will fires a GUILD_CREATE Gateway event.
+
+        https://discord.com/developers/docs/resources/guild#create-guild
       operationId: PostGuilds
       parameters:
         - name: User-Agent
@@ -70,6 +83,13 @@ paths:
     get:
       tags:
         - Guilds
+      description: >-
+        Returns an audit log object for the guild.
+
+        Requires the 'VIEW_AUDIT_LOG' permission.
+
+
+        https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
       operationId: GetGuildAuditLogs
       parameters:
         - name: guildId
