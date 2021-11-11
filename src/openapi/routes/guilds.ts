@@ -6,6 +6,13 @@ import { GuildHTTPObject } from "../../types/response/guild";
 import { DefaultHeaders, ErrorResponse, Snowflake } from "../../types/common";
 
 
+/**
+ * Create a new guild. Returns a guild object on success.
+ * 
+ * This action will fires a GUILD_CREATE Gateway event.
+ * 
+ * https://discord.com/developers/docs/resources/guild#create-guild
+ */
 @endpoint({
     method: "POST",
     path: "/guilds",
@@ -36,6 +43,12 @@ class PostGuilds {
 }
 
 
+/**
+ * Returns an audit log object for the guild.
+ * Requires the 'VIEW_AUDIT_LOG' permission.
+ * 
+ * https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log
+ */
 @endpoint({
     method: "GET",
     path: "/guilds/:guildId/audit-logs",

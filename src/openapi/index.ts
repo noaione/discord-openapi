@@ -21,6 +21,9 @@ import "./routes/index";
  * - v6 (Discord API v6) - Deprecated **[Default]**
  * - v8 (Discord API v8) - Active (Not recommended)
  * - v9 (Discord API v9) - Active (Recommended)
+ * 
+ * You can use client like [Insomnia](https://insomnia.rest/) to request the API.<br>
+ * Since you cannot use this website to do it because of CORS (and I'm not planning to circumvent it).
  */
 @api({
     name: "Discord API",
