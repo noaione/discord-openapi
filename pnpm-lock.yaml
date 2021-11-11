@@ -3,10 +3,12 @@ lockfileVersion: 5.3
 specifiers:
   '@airtasker/spot': ^1.9.0
   '@types/js-yaml': ^4.0.4
+  '@types/lodash.clonedeep': ^4.5.6
   '@types/ncp': ^2.0.5
   '@types/node': ^16.11.7
   discord-api-types: ^0.24.0
   js-yaml: ^4.1.0
+  lodash.clonedeep: ^4.5.0
   ncp: ^2.0.0
   ts-node: ^10.4.0
   typescript: ^4.4.4
@@ -15,10 +17,12 @@ dependencies:
   '@airtasker/spot': 1.9.0
   discord-api-types: 0.24.0
   js-yaml: 4.1.0
+  lodash.clonedeep: 4.5.0
   ncp: 2.0.0
 
 devDependencies:
   '@types/js-yaml': 4.0.4
+  '@types/lodash.clonedeep': 4.5.6
   '@types/ncp': 2.0.5
   '@types/node': 16.11.7
   ts-node: 10.4.0_ee928ac548ac44c173bf0d4654ae2c29
@@ -191,6 +195,16 @@ packages:
 
   /@types/js-yaml/4.0.4:
     resolution: {integrity: sha512-AuHubXUmg0AzkXH0Mx6sIxeY/1C110mm/EkE/gB1sTRz3h2dao2W/63q42SlVST+lICxz5Oki2hzYA6+KnnieQ==}
+    dev: true
+
+  /@types/lodash.clonedeep/4.5.6:
+    resolution: {integrity: sha512-cE1jYr2dEg1wBImvXlNtp0xDoS79rfEdGozQVgliDZj1uERH4k+rmEMTudP9b4VQ8O6nRb5gPqft0QzEQGMQgA==}
+    dependencies:
+      '@types/lodash': 4.14.176
+    dev: true
+
+  /@types/lodash/4.14.176:
+    resolution: {integrity: sha512-xZmuPTa3rlZoIbtDUyJKZQimJV3bxCmzMIO2c9Pz9afyDro6kr7R79GwcB6mRhuoPmV2p1Vb66WOJH7F886WKQ==}
     dev: true
 
   /@types/minimatch/3.0.5:
@@ -930,6 +944,10 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.8
+    dev: false
+
+  /lodash.clonedeep/4.5.0:
+    resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
     dev: false
 
   /lodash/4.17.21:
