@@ -1,7 +1,7 @@
 import { Spot } from "@airtasker/spot";
-import path from "path";
-import { copyFileSync } from "fs";
 import { mkdirSync, writeFileSync } from "fs";
+
+import path from "path";
 import yaml from "js-yaml";
 import ncp from "ncp";
 
@@ -38,14 +38,12 @@ console.time("[Deploy] Writing AAPI2 file...");
 console.timeEnd("[Deploy] Writing AAPI2 file...");
 
 console.time("[Deploy] Copying template files...");
-ncp(TEMPLATE, TARGET, (err: Error) => {
+ncp(TEMPLATE, TARGET, (err) => {
     if (err) {
         return console.error(err);
     }
+    writeFileSync(path.join(TARGET, ".nojekyll"), "");
     console.timeEnd("[Deploy] Copying template files...");
 });
-// copyFileSync(path.join(TEMPLATE, "index.html"), path.join(TARGET, "index.html"));
-writeFileSync(path.join(TARGET, ".nojekyll"), "");
-console.timeEnd("[Deploy] Copying template files...");
 
 console.info("[Deploy] Deployment finished");
