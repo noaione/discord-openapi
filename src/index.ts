@@ -14,7 +14,7 @@ function generateOAS3() {
     const contract = Spot.parseContract(apiPath);
     const openApi = Spot.OpenApi3.generateOpenAPI3(contract);
 
-    return yaml.dump(openApi, { skipInvalid: true });
+    return [yaml.dump(openApi, { skipInvalid: true }), JSON.stringify(openApi, null, 4)];
 }
 
 function generateAAPI2() {
@@ -22,7 +22,7 @@ function generateAAPI2() {
     return null;
 }
 
-const oa3 = generateOAS3();
+const [oa3yaml, oa3json] = generateOAS3();
 const aapi2 = generateAAPI2();
 
 console.time("[Deploy] Creating dist folder...");
@@ -30,7 +30,8 @@ mkdirSync(TARGET, { recursive: true });
 console.timeEnd("[Deploy] Creating dist folder...");
 
 console.time("[Deploy] Writing OAS3 file...");
-writeFileSync(path.join(TARGET, "openapi.yaml"), oa3);
+writeFileSync(path.join(TARGET, "openapi.yaml"), oa3yaml);
+writeFileSync(path.join(TARGET, "openapi.json"), oa3json);
 console.timeEnd("[Deploy] Writing OAS3 file...");
 
 console.time("[Deploy] Writing AAPI2 file...");
