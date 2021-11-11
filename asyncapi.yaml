@@ -1,0 +1,555 @@
+asyncapi: 2.2.0
+id: urn:com:discord:gateway
+info:
+  title: Discord Gateway API
+  version: v9-1.0.0
+  description: >-
+    **This is a custom AsyncAPI 2.2.0 compatible schemas for Discord Gateway
+    API.**
+
+
+    It's mainly made because looking at the documentation is very hard and
+    confusing sometimes.
+
+    So some people might just want to use AsyncAPI schema to look or even
+    generate
+
+    the code for their own API client.
+
+
+    Maintaned by [N4O#8868](https://github.com/noaione/discord-openapi).<br>
+
+    This project is not affiliated with Discord whatsoever.
+
+
+    Please report issue at:
+    [https://github.com/noaione/discord-openapi](https://github.com/noaione/discord-openapi)
+
+
+    Gateway API Version:
+
+    - v6 (Gateway API v6) - Deprecated **[Default]**
+
+    - v8 (Gateway API v8) - Active (Not recommended)
+
+    - v9 (Gateway API v9) - Active (Recommended)
+servers:
+  secureGateway:
+    url: wss://gateway.discord.gg?v={version}&encoding=json
+    protocol: wss
+    description: Secure gateway to connect to Discord Gateway API
+    variables:
+      version:
+        default: '9'
+        enum:
+          - '6'
+          - '8'
+          - '9'
+    security:
+      - token: []
+channels:
+  /:
+    publish:
+      message:
+        oneOf:
+          - $ref: '#/components/messages/GUILD_CREATE'
+    subscribe:
+      message:
+        oneOf: []
+components:
+  schemas:
+    ISO8601:
+      type: string
+      format: date-time
+      description: An ISO8601 compliant timestamp.
+    Snowflake:
+      type: string
+      description: A snowflake or ID for identifying unique object in Discord.
+    VideoQualityMode:
+      type: integer
+      enum:
+        - 1
+        - 2
+      format: int32
+    ThreadArchive:
+      type: integer
+      enum:
+        - 60
+        - 1440
+        - 4320
+        - 10080
+      format: int32
+    ChannelType:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 10
+        - 11
+        - 12
+        - 13
+      format: int32
+    GuildChannel:
+      type: object
+      properties:
+        guild_id:
+          $ref: '#/components/schemas/Snowflake'
+        position:
+          type: number
+          format: float
+          description: The position of the channel in a guild.
+        topic:
+          description: The topic of the channel.
+          oneOf:
+            - type: 'null'
+            - type: string
+        nsfw:
+          type: boolean
+          description: Is the channel NSFW-restricted or not.
+        rate_limit_per_user:
+          type: number
+          format: float
+          description: Slowmode of the channel.
+        bitrate:
+          type: number
+          format: float
+          description: The bitrate of the voice/stage channel.
+        user_limit:
+          type: number
+          format: float
+          description: The user limit of the voice channel
+        permission_overwrites:
+          type: array
+          items:
+            type: string
+          description: Explicit permission overwrites for members and roles
+        parent_id:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Snowflake'
+        rtc_region:
+          description: Voice region id for the voice channel, automatic when set to null.
+          oneOf:
+            - type: 'null'
+            - type: string
+        video_quality_mode:
+          $ref: '#/components/schemas/VideoQualityMode'
+        default_auto_archive_duration:
+          $ref: '#/components/schemas/ThreadArchive'
+        last_message_id:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Snowflake'
+        last_pin_timestamp:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/ISO8601'
+        permissions:
+          type: string
+          description: >-
+            Computed permissions for the invoking user in the channel, including
+            overwrites,
+
+            only included when part of the resolved data received on a slash
+            command interaction
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        name:
+          type: string
+          description: The channel name.
+        type:
+          $ref: '#/components/schemas/ChannelType'
+      required:
+        - id
+        - type
+    ChannelThread:
+      type: object
+      properties:
+        rate_limit_per_user:
+          type: number
+          format: float
+          description: Slowmode of the channel.
+        owner_id:
+          $ref: '#/components/schemas/Snowflake'
+        message_count:
+          type: number
+          format: float
+          description: An approximate count of messages in a thread, stops counting at 50
+        member_count:
+          type: number
+          format: float
+          description: An approximate count of users in a thread, stops counting at 50
+        thread_metadata:
+          type: array
+          items:
+            type: string
+          description: Thread-specific fields not needed by other channels
+        member:
+          type: array
+          items:
+            type: string
+          description: >-
+            Thread member object for the current user, if they have joined the
+            thread, only included on certain API endpoints
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        name:
+          type: string
+          description: The channel name.
+        type:
+          $ref: '#/components/schemas/ChannelType'
+      required:
+        - id
+        - type
+    VerificationLevel:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+      format: int32
+      description: |-
+        The verification level of the guild.
+        0 is none, 1 is low, 2 is medium, 3 is high, 4 is very high.
+    MessageNotificationLevel:
+      type: integer
+      enum:
+        - 0
+        - 1
+      format: int32
+      description: |-
+        The default message notification level of the guild.
+        0 is all messages, 1 is only mentions.
+    ExplicitContentFilterLevel:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+      format: int32
+      description: |-
+        The default explicit content filter level of the guild.
+        0 is disabled, 1 is members without roles, 2 is everyone.
+    GuildFeatures:
+      type: string
+      enum:
+        - ANIMATED_BANNER
+        - ANIMATED_ICON
+        - BANNER
+        - COMMERCE
+        - COMMUNITY
+        - DISCOVERABLE
+        - FEATURABLE
+        - INVITE_SPLASH
+        - MEMBER_VERIFICATION_GATE_ENABLED
+        - MONETIZATION_ENABLED
+        - MORE_EMOJI
+        - MORE_STICKERS
+        - NEWS
+        - PARTNERED
+        - PREVIEW_ENABLED
+        - PRIVATE_THREADS
+        - ROLE_ICONS
+        - SEVEN_DAY_THREAD_ARCHIVE
+        - THREE_DAY_THREAD_ARCHIVE
+        - TICKETED_EVENTS_ENABLED
+        - VANITY_URL
+        - VERIFIED
+        - VIP_REGIONS
+        - WELCOME_SCREEN_ENABLED
+      description: |-
+        Guild features, if the guild have one of this features,
+        that means the guild have it enabled or available.
+    MFALevel:
+      type: integer
+      enum:
+        - 0
+        - 1
+      format: int32
+      description: |-
+        Guild MFA level needed for user to join.
+        0 means none, 1 means elevated/needed.
+    SystemChannelFlags:
+      type: integer
+      enum:
+        - 1
+        - 2
+        - 4
+        - 8
+      format: int32
+      description: |-
+        Supress some system channels messages.
+        1 will disable member join notification,
+        2 will disable server boost notification,
+        4 will disable server setup tips
+        8 will hide member join sticker reply actions.
+    PremiumTier:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      format: int32
+      description: |-
+        Current boost level of the guild.
+        0 means none, 1 means level 1, 2 means level 2, etc.
+    NSFWLevel:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      format: int32
+      description: |-
+        The NSFW level of the guild
+        0 means default level, 1 means explicit content only,
+        2 means safe, 3 means age restricted.
+    GuildGatewayObject:
+      type: object
+      properties:
+        joined_at:
+          $ref: '#/components/schemas/ISO8601'
+        large:
+          type: boolean
+        unavailable:
+          type: boolean
+        member_count:
+          type: number
+          format: float
+        voice_states:
+          type: array
+          items:
+            type: string
+        members:
+          type: array
+          items:
+            type: string
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuildChannel'
+        threads:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelThread'
+        presences:
+          type: array
+          items:
+            type: string
+        stage_instances:
+          type: array
+          items:
+            type: string
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        name:
+          type: string
+        icon:
+          oneOf:
+            - type: 'null'
+            - type: string
+        icon_hash:
+          oneOf:
+            - type: 'null'
+            - type: string
+        splash:
+          oneOf:
+            - type: 'null'
+            - type: string
+        discovery_splash:
+          oneOf:
+            - type: 'null'
+            - type: string
+        owner_id:
+          $ref: '#/components/schemas/Snowflake'
+        region:
+          oneOf:
+            - type: 'null'
+            - type: string
+        afk_channel_id:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Snowflake'
+        afk_timeout:
+          type: number
+          format: float
+        widget_enabled:
+          type: boolean
+        widget_channel_id:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Snowflake'
+        verification_level:
+          $ref: '#/components/schemas/VerificationLevel'
+        default_message_notifications:
+          $ref: '#/components/schemas/MessageNotificationLevel'
+        explicit_content_filter:
+          $ref: '#/components/schemas/ExplicitContentFilterLevel'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Snowflake'
+        emojis:
+          type: array
+          items:
+            type: string
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuildFeatures'
+        mfa_level:
+          $ref: '#/components/schemas/MFALevel'
+        application_id:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Snowflake'
+        system_channel_id:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Snowflake'
+        system_channel_flags:
+          $ref: '#/components/schemas/SystemChannelFlags'
+        rules_channel_id:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Snowflake'
+        max_presences:
+          oneOf:
+            - type: 'null'
+            - type: number
+              format: float
+        max_members:
+          type: number
+          format: float
+        vanity_url_code:
+          oneOf:
+            - type: 'null'
+            - type: string
+        description:
+          oneOf:
+            - type: 'null'
+            - type: string
+        banner:
+          oneOf:
+            - type: 'null'
+            - type: string
+        premium_tier:
+          $ref: '#/components/schemas/PremiumTier'
+        premium_subscription_count:
+          type: number
+          format: float
+        preferred_locale:
+          type: string
+        public_updates_channel_id:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Snowflake'
+        max_video_channel_users:
+          type: number
+          format: float
+        approximate_member_count:
+          type: number
+          format: float
+        approximate_presence_count:
+          type: number
+          format: float
+        welcome_screen:
+          type: string
+        nsfw_level:
+          $ref: '#/components/schemas/NSFWLevel'
+        stickers:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - icon
+        - splash
+        - discovery_splash
+        - owner_id
+        - afk_channel_id
+        - afk_timeout
+        - verification_level
+        - default_message_notifications
+        - explicit_content_filter
+        - roles
+        - emojis
+        - features
+        - mfa_level
+        - application_id
+        - system_channel_id
+        - system_channel_flags
+        - rules_channel_id
+        - vanity_url_code
+        - description
+        - banner
+        - premium_tier
+        - preferred_locale
+        - public_updates_channel_id
+        - max_video_channel_users
+        - approximate_member_count
+        - approximate_presence_count
+        - welcome_screen
+        - nsfw_level
+        - stickers
+  messages:
+    GUILD_CREATE:
+      name: GUILD_CREATE
+      summary: ''
+      tags:
+        - name: Guilds
+      payload:
+        type: object
+        properties:
+          op:
+            type: integer
+            description: opcode for the payload
+            enum:
+              - 0
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 6
+              - 7
+              - 8
+              - 9
+              - 10
+              - 11
+          d:
+            type: object
+            description: Event data or the payload
+            additionalProperties:
+              $ref: '#/components/schemas/GuildGatewayObject'
+          s:
+            type: integer
+            oneOf:
+              - type: string
+              - type: 'null'
+            description: >-
+              Sequence number, used for resuming sessions and heartbeats (This
+              will be Null if op is not 0)
+          t:
+            oneOf:
+              - type: string
+              - type: 'null'
+            description: The event name for this payload (This will be Null if op is not 0)
+            default: GUILD_CREATE
+      title: Guild Create Event
+  securitySchemes:
+    token:
+      type: httpApiKey
+      name: token
+      in: header
+defaultContentType: application/json
