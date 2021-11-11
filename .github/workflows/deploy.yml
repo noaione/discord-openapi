@@ -17,9 +17,24 @@ jobs:
       with:
         node-version: 16.x
 
-    - name: Install dependencies then Build
+    - name: Cache pnpm modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-
+
+    - name: Install dependencies
+      uses: pnpm/action-setup@v2.0.1
+      with:
+        version: 6.21.0
+        run_install: |
+          - recursive: true
+            args: [--frozen-lockfile]
+
+    - name: Build
       run: |
-        npm ci
         npm run deploy
 
     - name: Deploy
