@@ -33,6 +33,9 @@ info:
     - v8 (Gateway API v8) - Active (Not recommended)
 
     - v9 (Gateway API v9) - Active (Recommended)
+
+
+    If you want to see documentation for the API? Click [here](/).
 servers:
   secureGateway:
     url: wss://gateway.discord.gg?v={version}&encoding=json
@@ -528,10 +531,8 @@ components:
               - 10
               - 11
           d:
-            type: object
-            description: Event data or the payload
-            additionalProperties:
-              $ref: '#/components/schemas/GuildGatewayObject'
+            $ref: '#/components/schemas/GuildGatewayObject'
+            description: Event data or payload
           s:
             type: integer
             oneOf:
@@ -550,6 +551,9 @@ components:
   securitySchemes:
     token:
       type: httpApiKey
-      name: token
+      name: Authorization
       in: header
 defaultContentType: application/json
+externalDocs:
+  url: https://discord.com/developers/docs/intro
+  description: Discord Developer Documentation

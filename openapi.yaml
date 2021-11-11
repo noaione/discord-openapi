@@ -36,6 +36,9 @@ info:
 
     Since you cannot use this website to do it because of CORS (and I'm not
     planning to circumvent it).
+
+
+    If you want to see documentation for the Gateway? Click [here](/gateway).
   version: v9-1.0.0
 paths:
   /guilds:

@@ -4,7 +4,7 @@
     "info": {
         "title": "Discord Gateway API",
         "version": "v9-1.0.0",
-        "description": "**This is a custom AsyncAPI 2.2.0 compatible schemas for Discord Gateway API.**\n\nIt's mainly made because looking at the documentation is very hard and confusing sometimes.\nSo some people might just want to use AsyncAPI schema to look or even generate\nthe code for their own API client.\n\nMaintaned by [N4O#8868](https://github.com/noaione/discord-openapi).<br>\nThis project is not affiliated with Discord whatsoever.\n\nPlease report issue at: [https://github.com/noaione/discord-openapi](https://github.com/noaione/discord-openapi)\n\nGateway API Version:\n- v6 (Gateway API v6) - Deprecated **[Default]**\n- v8 (Gateway API v8) - Active (Not recommended)\n- v9 (Gateway API v9) - Active (Recommended)"
+        "description": "**This is a custom AsyncAPI 2.2.0 compatible schemas for Discord Gateway API.**\n\nIt's mainly made because looking at the documentation is very hard and confusing sometimes.\nSo some people might just want to use AsyncAPI schema to look or even generate\nthe code for their own API client.\n\nMaintaned by [N4O#8868](https://github.com/noaione/discord-openapi).<br>\nThis project is not affiliated with Discord whatsoever.\n\nPlease report issue at: [https://github.com/noaione/discord-openapi](https://github.com/noaione/discord-openapi)\n\nGateway API Version:\n- v6 (Gateway API v6) - Deprecated **[Default]**\n- v8 (Gateway API v8) - Active (Not recommended)\n- v9 (Gateway API v9) - Active (Recommended)\n\nIf you want to see documentation for the API? Click [here](/)."
     },
     "servers": {
         "secureGateway": {
@@ -718,11 +718,8 @@
                             ]
                         },
                         "d": {
-                            "type": "object",
-                            "description": "Event data or the payload",
-                            "additionalProperties": {
-                                "$ref": "#/components/schemas/GuildGatewayObject"
-                            }
+                            "$ref": "#/components/schemas/GuildGatewayObject",
+                            "description": "Event data or payload"
                         },
                         "s": {
                             "type": "integer",
@@ -756,10 +753,14 @@
         "securitySchemes": {
             "token": {
                 "type": "httpApiKey",
-                "name": "token",
+                "name": "Authorization",
                 "in": "header"
             }
         }
     },
-    "defaultContentType": "application/json"
+    "defaultContentType": "application/json",
+    "externalDocs": {
+        "url": "https://discord.com/developers/docs/intro",
+        "description": "Discord Developer Documentation"
+    }
 }

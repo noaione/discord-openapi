@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Discord Gateway AsyncAPI</title>
+        <meta name="description" content="Discord Gateway API documentation but it's in AsyncAPI format">
+        <script src="https://unpkg.com/@asyncapi/web-component@1.0.0-next.21/lib/asyncapi-web-component.js" defer></script>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #2c2f33;
+            }
+        </style>
+    </head>
+    <body>
+        <asyncapi-component
+            id="root"
+            schemaUrl="/asyncapi.yaml"
+            cssImportPath="https://unpkg.com/@asyncapi/react-component@1.0.0-next.21/styles/default.css"
+            config='{"show":{"sidebar":true},"sidebar":{"showOperations":"byDefault"}}'
+        >
+        </asyncapi-component>
+    </body>
+    <script type="text/javascript">
+        const injectStyles = `
+        div.sidebar > div,
+        .sidebar {
+            background: #36393d;
+            color: white;
+        }
+
+        a.text-gray-700.no-underline,
+        a.text-xs.uppercase.text-gray-700 {
+            color: white;
+        }
+
+        a.text-gray-700.no-underline:hover,
+        a.text-xs.uppercase.text-gray-700:hover {
+            color: #c1c1c1;
+        }
+
+        .panel--center {
+            background: #2c2f33;
+            color: rgb(187, 187, 187);
+        }
+
+        .prose,
+        .prose strong,
+        .panel-item--center > div > * > span {
+            color: rgb(187, 187, 187);
+            border-color: #545454;
+        }
+
+        .text-orange-600 {
+            color: rgba(221, 107, 32, 1) !important;
+        }
+
+        .prose a {
+            color: rgb(113, 183, 255);
+        }
+
+        .panel-item--center > div {
+            border-color: #545454;
+            background: #2c2f33;
+            color: rgb(187, 187, 187);
+        }
+
+        .border .text-orange-600 {
+            border-color: #545454;
+        }
+
+        svg.inline-block.align-baseline.cursor-pointer.-mb-1.w-5 {
+            filter: invert(0.6);
+        }
+
+        #server-secureGateway-security > * > h5 {
+            color: rgb(187, 187, 187);
+        }
+
+        // .rounded.p-4.py-2.border.bg-gray-100.block {
+        //     filter: invert(0.6);
+        // }
+
+        .bg-white {
+            background: #36393d;
+        }
+
+        .panel--right {
+            background: rgb(45, 55, 72);
+        }
+        `;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            console.info("Loaded");
+            document.getElementById("root").shadowRoot.querySelector("style").innerHTML += injectStyles;
+        });
+    </script>
+</html>
