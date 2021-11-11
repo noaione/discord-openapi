@@ -26,10 +26,11 @@ interface ChannelBase {
 }
 
 export interface GroupDMChannel extends ChannelBase {
+    // TODO: Change this
     /**
      * The recipients in DM.
      */
-    recipients?: any[];
+    recipients?: string[];
     /**
      * The icon hash for the channel.
      */
@@ -127,10 +128,11 @@ export interface ChannelThread extends ChannelBase {
       * An approximate count of users in a thread, stops counting at 50
       */
     member_count?: number;
+    // TODO: Change this
     /**
       * Thread-specific fields not needed by other channels
       */
-    thread_metadata?: any;
+    thread_metadata?: string[];
     // TODO: Change this
     /**
       * Thread member object for the current user, if they have joined the thread, only included on certain API endpoints
@@ -138,28 +140,3 @@ export interface ChannelThread extends ChannelBase {
     member?: string[];
 }
 
-export type ChannelResponse = GuildChannel & ChannelThread & GroupDMChannel;
-
-export type ChannelGuildBodyRequest = Omit<GuildChannel, "id" | "last_pin_timestamp" | "last_message_id" | "guild_id" | "permissions">
-export type ChannelGroupDMBodyRequest = Omit<GroupDMChannel, "id" | "recipients" | "owner_id" | "application_id">;
-
-interface ChannelThreadBodyRequestExtra {
-    /**
-     * Whether the thread is archived
-     */
-    archived?: boolean;
-    /**
-     * Whether the thread is locked; when a thread is locked, only users with MANAGE_THREADS can unarchive it
-     */
-    locked?: boolean;
-    /**
-     * Whether non-moderators can add other non-moderators to a thread; only available on private threads
-     */
-    invitable?: boolean;
-    /**
-     * Duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080
-     */
-    auto_archive_duration?: ThreadArchive;
-}
-
-export type ChannelThreadBodyRequest = Pick<ChannelThread, "name" | "rate_limit_per_user"> & ChannelThreadBodyRequestExtra;
