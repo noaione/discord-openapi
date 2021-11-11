@@ -6,6 +6,38 @@
         <meta name="description" content="Discord API documentation but it's in OpenAPI format">
         <!-- Script -->
         <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
+
+        <style>
+            .download-btn {
+                border-radius: var(--border-radius);
+                font-weight: 600;
+                display: inline-block;
+                padding: 6px 16px;
+                font-size: var(--font-size-small);
+                outline: 0px;
+                line-height: 1;
+                text-align: center;
+                white-space: nowrap;
+                border: 2px solid var(--primary-color);
+                background-color: transparent;
+                transition: background-color 0.2s ease 0s;
+                user-select: none;
+                cursor: pointer;
+                box-shadow: rgb(0 0 0 / 12%) 0px 1px 3px, rgb(0 0 0 / 24%) 0px 1px 2px;
+                border-width: 1px;
+                text-decoration: none;
+                color: var(--primary-color);
+            }
+
+            .download-btn:hover {
+                background-color: var(--primary-color);
+                color: var(--primary-color-invert);
+            }
+
+            .-ml-slot {
+                margin-left: -16px;
+            }
+        </style>
     </head>
     <body>
         <rapi-doc
@@ -23,10 +55,18 @@
             font-size="large"
             fetch-credentials="omit"
             default-api-server="https://discord.com/api/{apiVersion}"
+            allow-spec-file-download="false"
         >
             <div slot="nav-logo" style="display: flex; align-items: center; justify-content: center;">
                 <img src="/assets/discord-logo-white.png" style="width:40px; margin-right: 20px"><span style="color:#fff">
                     <b>Discord</b> API</span>
+            </div>
+            <div slot="overview">
+                <a href="/openapi.yaml" class="download-btn -ml-slot">Download OpenAPI spec (yaml)</a>
+                <a href="/openapi.json" class="download-btn">Download OpenAPI spec (JSON)</a>
+            </div>
+            <div slot="overview" style="padding-bottom: 8px;">
+                <p class="-ml-slot">If you're viewing this from mobile, It's recommended to use landspace mode.</p>
             </div>
         </rapi-doc>
     </body>
