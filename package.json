@@ -29,7 +29,8 @@
   "dependencies": {
     "@airtasker/spot": "^1.9.0",
     "discord-api-types": "^0.24.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "ncp": "^2.0.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.4",

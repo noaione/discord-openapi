@@ -3,6 +3,7 @@ import path from "path";
 import { copyFileSync } from "fs";
 import { mkdirSync, writeFileSync } from "fs";
 import yaml from "js-yaml";
+import ncp from "ncp";
 
 const TARGET = path.join(__dirname, "..", "dist")
 const TEMPLATE = path.join(__dirname, "..", "template")
@@ -37,7 +38,13 @@ console.time("[Deploy] Writing AAPI2 file...");
 console.timeEnd("[Deploy] Writing AAPI2 file...");
 
 console.time("[Deploy] Copying template files...");
-copyFileSync(path.join(TEMPLATE, "index.html"), path.join(TARGET, "index.html"));
+ncp(TEMPLATE, TARGET, (err: Error) => {
+    if (err) {
+        return console.error(err);
+    }
+    console.timeEnd("[Deploy] Copying template files...");
+});
+// copyFileSync(path.join(TEMPLATE, "index.html"), path.join(TARGET, "index.html"));
 writeFileSync(path.join(TARGET, ".nojekyll"), "");
 console.timeEnd("[Deploy] Copying template files...");
 

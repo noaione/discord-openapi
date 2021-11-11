@@ -6,6 +6,7 @@ specifiers:
   '@types/node': ^16.11.7
   discord-api-types: ^0.24.0
   js-yaml: ^4.1.0
+  ncp: ^2.0.0
   ts-node: ^10.4.0
   typescript: ^4.4.4
 
@@ -13,6 +14,7 @@ dependencies:
   '@airtasker/spot': 1.9.0
   discord-api-types: 0.24.0
   js-yaml: 4.1.0
+  ncp: 2.0.0
 
 devDependencies:
   '@types/js-yaml': 4.0.4
@@ -1026,6 +1028,11 @@ packages:
 
   /mute-stream/0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
+    dev: false
+
+  /ncp/2.0.0:
+    resolution: {integrity: sha1-GVoh1sRuNh0vsSgbo4uR6d9727M=}
+    hasBin: true
     dev: false
 
   /negotiator/0.6.2:
