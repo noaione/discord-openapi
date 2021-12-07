@@ -6,7 +6,7 @@
   "scripts": {
     "deploy": "ts-node --transpile-only src/index.ts",
     "gen:openapi": "spot generate --contract src/openapi/index.ts -l yaml -g openapi3 --out generated/",
-    "gen:asyncapi": "echo Soon",
+    "gen:asyncapi": "ts-node --transpile-only scripts/generate-aapi2.ts",
     "generate": "npm run gen:openapi && npm run gen:asyncapi"
   },
   "repository": {
