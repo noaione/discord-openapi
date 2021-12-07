@@ -54,6 +54,29 @@
         <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
     </head>
     <body>
+        <script>
+            function registerRapiEvent() {
+                const rapidocElement = document.getElementById("openapi-doc");
+                rapidocElement.addEventListener("spec-loaded", (e) => {
+                    const overViewSlot = document.querySelectorAll("[slot=overview]");
+                    overViewSlot.forEach((slot) => {
+                        slot.className = "";
+                    });
+                    const navLogoSlot = document.querySelectorAll("[slot=nav-logo]");
+                    navLogoSlot.forEach((slot) => {
+                        slot.className = "";
+                    });
+                })
+            }
+            if (document.readyState !== "loading") {
+                registerRapiEvent();
+            } else {
+                window.addEventListener("DOMContentLoaded", (event) => {
+                    console.info("DOMContentLoaded");
+                    registerRapiEvent();
+                });
+            }
+        </script>
         <rapi-doc
             id="openapi-doc"
             spec-url="/openapi.yaml"
@@ -86,29 +109,5 @@
                 <p class="-ml-slot">If you're viewing this from mobile, It's recommended to use landspace mode.</p>
             </div>
         </rapi-doc>
-
-        <script>
-            function registerRapiEvent() {
-                const rapidocElement = document.getElementById("openapi-doc");
-                rapidocElement.addEventListener("spec-loaded", (e) => {
-                    const overViewSlot = document.querySelectorAll("[slot=overview]");
-                    overViewSlot.forEach((slot) => {
-                        slot.className = "";
-                    });
-                    const navLogoSlot = document.querySelectorAll("[slot=nav-logo]");
-                    navLogoSlot.forEach((slot) => {
-                        slot.className = "";
-                    });
-                })
-            }
-            if (document.readyState !== "loading") {
-                registerRapiEvent();
-            } else {
-                window.addEventListener("DOMContentLoaded", (event) => {
-                    console.info("DOMContentLoaded");
-                    registerRapiEvent();
-                });
-            }
-        </script>
     </body>
 </html>
