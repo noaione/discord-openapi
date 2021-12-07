@@ -9,6 +9,8 @@ import { ChannelGuildMessageBody } from "../../types/request/channel";
 
 
 /**
+ * Create Guild
+ * 
  * Create a new guild. Returns a guild object on success.
  * 
  * This action will fires a GUILD_CREATE Gateway event.
@@ -45,6 +47,8 @@ class PostGuilds {
 }
 
 /**
+ * Get Guild
+ * 
  * Get a guild. Returns the guild object for the given id.
  * 
  * If with_counts is set to true, this endpoint will also return
@@ -98,6 +102,8 @@ class GetGuild {
 }
 
 /**
+ * Get Guild Preview
+ * 
  * Get a guild preview. Returns the guild preview object for the given id.
  * 
  * If the user is not in the guild, then the guild must be lurkable (it must be Discoverable or have a live public stage).
@@ -148,6 +154,8 @@ class GetGuildPreview {
 }
 
 /**
+ * Modify Guild
+ * 
  * Modify a guild's settings.
  * Requires the `MANAGE_GUILD` permission.
  * Returns the updated guild object on success and fires the GUILD_UPDATE Gateway event.
@@ -200,6 +208,8 @@ class PatchGuildModify {
 }
 
 /**
+ * Delete Guild
+ * 
  * Delete a guild permanently.
  * User must be the guild owner to delete it.
  * Fires a GUILD_DELETE gateway event on success.
@@ -247,7 +257,9 @@ class DeleteGuild {
 }
 
 /**
- * Get Guild Channels. Returns a list of channels in the guild.
+ * Get Guild Channels
+ * 
+ * Returns a list of channels in the guild.
  * 
  * This does not include threads.
  * 
@@ -297,7 +309,8 @@ class GetGuildChannels {
 }
 
 /**
- * Create Guild Channels.
+ * Create Guild Channels
+ * 
  * Requires the MANAGE_CHANNELS permission.
  * 
  * If setting permission overwrites,
@@ -355,6 +368,8 @@ class PostGuildChannelCreate {
 }
 
 /**
+ * Get Guild Audit Log
+ * 
  * Returns an audit log object for the guild.
  * Requires the 'VIEW_AUDIT_LOG' permission.
  * 
