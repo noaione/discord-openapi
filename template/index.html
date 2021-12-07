@@ -91,11 +91,11 @@
             window.addEventListener("DOMContentLoaded", (event) => {
                 const rapidocElement = document.getElementById("openapi-doc");
                 rapidocElement.addEventListener("spec-loaded", (e) => {
-                    const overViewSlot = rapidocElement.querySelectorAll("[slot=overview]");
+                    const overViewSlot = document.querySelectorAll("[slot=overview]");
                     overViewSlot.forEach((slot) => {
                         slot.className = "";
                     });
-                    const navLogoSlot = rapidocElement.querySelectorAll("[slot=nav-logo]");
+                    const navLogoSlot = document.querySelectorAll("[slot=nav-logo]");
                     navLogoSlot.forEach((slot) => {
                         slot.className = "";
                     });
