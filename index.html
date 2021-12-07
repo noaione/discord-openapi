@@ -57,6 +57,7 @@
         <script>
             function registerRapiEvent() {
                 const rapidocElement = document.getElementById("openapi-doc");
+                console.info("Loaded element", rapidocElement);
                 rapidocElement.addEventListener("spec-loaded", (e) => {
                     const overViewSlot = document.querySelectorAll("[slot=overview]");
                     overViewSlot.forEach((slot) => {
@@ -69,6 +70,7 @@
                 })
             }
             if (document.readyState !== "loading") {
+                console.info("Loaded already");
                 registerRapiEvent();
             } else {
                 window.addEventListener("DOMContentLoaded", (event) => {
