@@ -73,7 +73,8 @@
                 console.info("Loaded already");
                 registerRapiEvent();
             } else {
-                window.addEventListener("DOMContentLoaded", (event) => {
+                console.info("Registering event");
+                window.addEventListener("load", (event) => {
                     console.info("DOMContentLoaded");
                     registerRapiEvent();
                 });
