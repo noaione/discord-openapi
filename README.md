@@ -2,6 +2,8 @@
 
 Please come back later
 
+Public Kanban for progress tracking: https://noaione.notion.site/035a40b901c949ec874388b51b05615a?v=3f1fd7249438451f9f4e8d9653b63045
+
 ## Plan
 
 Parser:
