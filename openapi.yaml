@@ -609,6 +609,19 @@ components:
         - 12
         - 13
       format: int32
+      description: >-
+        The channel type.
+
+        0 is a guild text channel, 1 is a DM between user, 2 is a guild voice
+        channel,
+
+        3 is a group DM, 4 is a guild category, 5 is a guild news channel,
+
+        6 is a guild store channel, 10 is a temporary sub-channel within news
+        channels,
+
+        11 is a public thread, 12 is a private thread, 13 is a guild stage
+        channel.
     Snowflake:
       type: string
       description: A snowflake or ID for identifying unique object in Discord.
@@ -641,6 +654,9 @@ components:
         - 1
         - 2
       format: int32
+      description: |-
+        The video quality that user can pick when streaming
+        1 means automatically choosen by discord, 2 means 720p
     ThreadArchive:
       type: integer
       enum:
@@ -649,6 +665,11 @@ components:
         - 4320
         - 10080
       format: int32
+      description: >-
+        The thread archive duration, in seconds.
+
+        4320 is locked behind boost level 1, 10080 is locked behind boost level
+        2.
     ChannelGuildMessageBody:
       type: object
       properties:
