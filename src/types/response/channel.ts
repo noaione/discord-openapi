@@ -3,8 +3,23 @@ import { ISO8601, Snowflake } from "../common";
 import { PermissionBit, PermissionsOverwriteObject } from "./permissions";
 import { PartialUserObjectBase } from "./user";
 
+/**
+ * The channel type.
+ * 0 is a guild text channel, 1 is a DM between user, 2 is a guild voice channel,
+ * 3 is a group DM, 4 is a guild category, 5 is a guild news channel,
+ * 6 is a guild store channel, 10 is a temporary sub-channel within news channels,
+ * 11 is a public thread, 12 is a private thread, 13 is a guild stage channel.
+ */
 export type ChannelType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 10 | 11 | 12 | 13;
+/**
+ * The video quality that user can pick when streaming
+ * 1 means automatically choosen by discord, 2 means 720p
+ */
 export type VideoQualityMode = 1 | 2;
+/**
+ * The thread archive duration, in seconds.
+ * 4320 is locked behind boost level 1, 10080 is locked behind boost level 2.
+ */
 export type ThreadArchive = 60 | 1440 | 4320 | 10080;
 
 interface ChannelBase {
@@ -18,12 +33,6 @@ interface ChannelBase {
     name?: string;
     /**
      * The type of the channel.
-     * 0 is guild text channel, 1 is DM between users,
-     * 2 is voice channel in guild, 3 is group DM,
-     * 4 is guild category, 5 is guild news channel,
-     * 6 is guild store channel, 10 is temporary sub-channel within guild news channel,
-     * 11 is guild public thread, 12 is guild private thread,
-     * 13 is guild stage channel.
      */
     type: ChannelType;
 }
@@ -185,4 +194,3 @@ export interface ChannelThread extends ChannelBase {
      */
     member?: ThreadMemberObject[];
 }
-
