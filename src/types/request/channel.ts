@@ -1,3 +1,4 @@
+import { PermissionsOverwriteObject } from "../response/permissions";
 import { Int32 } from "@airtasker/spot";
 import { Snowflake } from "../common";
 
@@ -73,7 +74,7 @@ export interface ChannelGuildMessageBody {
     /**
      * Explicit permission overwrites for members and roles
      */
-    permission_overwrites?: string[];
+    permission_overwrites?: PermissionsOverwriteObject[];
     /**
      * The parent ID of category for a channel, or the parent ID of text channel if it's a thread.
      */

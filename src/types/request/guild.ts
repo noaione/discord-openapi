@@ -85,4 +85,13 @@ export interface POSTGuildCreation {
      * This is the combined bitwise value of the system channel flags.
      */
     system_channel_flags?: number;
+    /**
+     * Whether the guild's boost progress bar should be enabled.
+     */
+    premium_progress_bar_enabled: boolean;
+}
+
+export interface GETGuildQuery {
+    /** When true, will return approximate member and presence count for the guild */
+    with_counts?: "false" | "true";
 }

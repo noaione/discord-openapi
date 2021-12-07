@@ -1,3 +1,4 @@
+import { PermissionBit } from "../response/permissions";
 import { B64StringFile } from "../common";
 
 export interface GuildRoleBody {
@@ -27,7 +28,7 @@ export interface GuildRoleBody {
     /**
      * Bitwise value of the enabled/disabled permissions.
      */
-    permissions?: string;
+    permissions?: PermissionBit;
     /**
      * Whether the role should be mentionable.
      * @default false

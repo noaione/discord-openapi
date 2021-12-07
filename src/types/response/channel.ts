@@ -1,4 +1,7 @@
-import { ISO8601, Nullable, Snowflake } from "../common";
+import { Int32 } from "@airtasker/spot";
+import { ISO8601, Snowflake } from "../common";
+import { PermissionBit, PermissionsOverwriteObject } from "./permissions";
+import { PartialUserObjectBase } from "./user";
 
 export type ChannelType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 10 | 11 | 12 | 13;
 export type VideoQualityMode = 1 | 2;
@@ -26,11 +29,10 @@ interface ChannelBase {
 }
 
 export interface GroupDMChannel extends ChannelBase {
-    // TODO: Change this
     /**
      * The recipients in DM.
      */
-    recipients?: string[];
+    recipients?: PartialUserObjectBase[];
     /**
      * The icon hash for the channel.
      */
@@ -74,11 +76,10 @@ export interface GuildChannel extends ChannelBase {
       * The user limit of the voice channel
       */
     user_limit?: number;
-    // TODO: Change this
     /**
      * Explicit permission overwrites for members and roles
      */
-    permission_overwrites?: string[];
+    permission_overwrites?: PermissionsOverwriteObject[];
     /**
      * The parent ID of category for a channel, or the parent ID of text channel if it's a thread.
      */
@@ -108,7 +109,54 @@ export interface GuildChannel extends ChannelBase {
      * Computed permissions for the invoking user in the channel, including overwrites,
      * only included when part of the resolved data received on a slash command interaction
      */
-    permissions?: string;
+    permissions?: PermissionBit;
+}
+
+export interface ThreadMetadataObject {
+    /**
+     * Whether the thread is archived
+     */
+    archived: boolean;
+    /**
+     * Duration in minutes to automatically archive the thread after recent activity.
+     */
+    auto_archive_duration: ThreadArchive;
+    /**
+     * Timestamp when the thread's archive status was last changed,
+     * used for calculating recent activity
+     */
+    archive_timestamp: ISO8601;
+    /**
+     * Whether the thread is locked; when a thread is locked,
+     * only users with MANAGE_THREADS can unarchive it
+     */
+    locked: boolean;
+    /**
+     * Whether non-moderators can add other non-moderators to a thread; only available on private threads
+     */
+    invitable?: boolean;
+}
+
+export interface ThreadMemberBaseObject {
+    /**
+     * The time the current user last joined the thread
+     */
+    join_timestamp: ISO8601;
+    /**
+     * Any user-thread settings, currently only used for notifications
+     */
+    flags: Int32;
+}
+
+export interface ThreadMemberObject extends ThreadMemberBaseObject {
+    /**
+     * The ID of the thread, fields will be omitted in GUILD_CREATE event.
+     */
+    id?: Snowflake;
+    /**
+     * THe ID of the user, fields will be omitted in GUILD_CREATE event.
+     */
+    user_id?: Snowflake;
 }
 
 export interface ChannelThread extends ChannelBase {
@@ -125,18 +173,16 @@ export interface ChannelThread extends ChannelBase {
      */
     message_count?: number;
     /**
-      * An approximate count of users in a thread, stops counting at 50
-      */
+     * An approximate count of users in a thread, stops counting at 50
+     */
     member_count?: number;
-    // TODO: Change this
     /**
-      * Thread-specific fields not needed by other channels
-      */
-    thread_metadata?: string[];
-    // TODO: Change this
+     * Thread-specific fields not needed by other channels
+     */
+    thread_metadata?: ThreadMetadataObject;
     /**
-      * Thread member object for the current user, if they have joined the thread, only included on certain API endpoints
-      */
-    member?: string[];
+     * Thread member object for the current user, if they have joined the thread, only included on certain API endpoints
+     */
+    member?: ThreadMemberObject[];
 }
 

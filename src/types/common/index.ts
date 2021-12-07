@@ -26,7 +26,7 @@ export interface DefaultHeaders {
     "User-Agent": "DiscordBot (https://github.com/noaione/discord-openapi, 1.0)"
 }
 
-export interface AuditHeader {
+export interface DefaultWithAuditHeader extends DefaultHeaders {
     /**
      * This endpoint support adding reason to audit log with this header.
      */
