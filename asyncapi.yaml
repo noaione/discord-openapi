@@ -68,6 +68,32 @@ components:
     Snowflake:
       type: string
       description: A snowflake or ID for identifying unique object in Discord.
+    PermissionBit:
+      type: string
+      description: A permission bit set.
+    PermissionsOverwriteObject:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        type:
+          type: integer
+          enum:
+            - 0
+            - 1
+          format: int32
+          description: |-
+            The overwrite type.
+            0 for role, 1 for member
+        allow:
+          $ref: '#/components/schemas/PermissionBit'
+        deny:
+          $ref: '#/components/schemas/PermissionBit'
+      required:
+        - id
+        - type
+        - allow
+        - deny
     VideoQualityMode:
       type: integer
       enum:
@@ -129,7 +155,7 @@ components:
         permission_overwrites:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/PermissionsOverwriteObject'
           description: Explicit permission overwrites for members and roles
         parent_id:
           oneOf:
@@ -153,13 +179,7 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/ISO8601'
         permissions:
-          type: string
-          description: >-
-            Computed permissions for the invoking user in the channel, including
-            overwrites,
-
-            only included when part of the resolved data received on a slash
-            command interaction
+          $ref: '#/components/schemas/PermissionBit'
         id:
           $ref: '#/components/schemas/Snowflake'
         name:
@@ -170,6 +190,47 @@ components:
       required:
         - id
         - type
+    ThreadMetadataObject:
+      type: object
+      properties:
+        archived:
+          type: boolean
+          description: Whether the thread is archived
+        auto_archive_duration:
+          $ref: '#/components/schemas/ThreadArchive'
+        archive_timestamp:
+          $ref: '#/components/schemas/ISO8601'
+        locked:
+          type: boolean
+          description: |-
+            Whether the thread is locked; when a thread is locked,
+            only users with MANAGE_THREADS can unarchive it
+        invitable:
+          type: boolean
+          description: >-
+            Whether non-moderators can add other non-moderators to a thread;
+            only available on private threads
+      required:
+        - archived
+        - auto_archive_duration
+        - archive_timestamp
+        - locked
+    ThreadMemberObject:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        user_id:
+          $ref: '#/components/schemas/Snowflake'
+        join_timestamp:
+          $ref: '#/components/schemas/ISO8601'
+        flags:
+          type: integer
+          format: int32
+          description: Any user-thread settings, currently only used for notifications
+      required:
+        - join_timestamp
+        - flags
     ChannelThread:
       type: object
       properties:
@@ -188,14 +249,11 @@ components:
           format: float
           description: An approximate count of users in a thread, stops counting at 50
         thread_metadata:
-          type: array
-          items:
-            type: string
-          description: Thread-specific fields not needed by other channels
+          $ref: '#/components/schemas/ThreadMetadataObject'
         member:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/ThreadMemberObject'
           description: >-
             Thread member object for the current user, if they have joined the
             thread, only included on certain API endpoints
@@ -240,36 +298,70 @@ components:
       description: |-
         The default explicit content filter level of the guild.
         0 is disabled, 1 is members without roles, 2 is everyone.
-    GuildFeatures:
-      type: string
-      enum:
-        - ANIMATED_BANNER
-        - ANIMATED_ICON
-        - BANNER
-        - COMMERCE
-        - COMMUNITY
-        - DISCOVERABLE
-        - FEATURABLE
-        - INVITE_SPLASH
-        - MEMBER_VERIFICATION_GATE_ENABLED
-        - MONETIZATION_ENABLED
-        - MORE_EMOJI
-        - MORE_STICKERS
-        - NEWS
-        - PARTNERED
-        - PREVIEW_ENABLED
-        - PRIVATE_THREADS
-        - ROLE_ICONS
-        - SEVEN_DAY_THREAD_ARCHIVE
-        - THREE_DAY_THREAD_ARCHIVE
-        - TICKETED_EVENTS_ENABLED
-        - VANITY_URL
-        - VERIFIED
-        - VIP_REGIONS
-        - WELCOME_SCREEN_ENABLED
-      description: |-
-        Guild features, if the guild have one of this features,
-        that means the guild have it enabled or available.
+    RoleTagObject:
+      type: object
+      properties:
+        bot_id:
+          $ref: '#/components/schemas/Snowflake'
+        integration_id:
+          $ref: '#/components/schemas/Snowflake'
+        premium_subscriber:
+          type: boolean
+          description: Whether this is the guild's premium subscriber role
+    RoleObject:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        name:
+          type: string
+          description: The Role name
+        color:
+          type: integer
+          format: int32
+          description: >-
+            Integer representation of the role color, default to 0 (for no
+            color)
+        hoist:
+          type: boolean
+          description: If this role is pinned in the user listing
+        icon:
+          description: |-
+            Role icon hash
+            Guild must be boosted to level 2 to have this.
+          oneOf:
+            - type: 'null'
+            - type: string
+        unicode_emoji:
+          description: |-
+            Role unicode emoji
+            Guild must be boosted to level 2 to have this.
+          oneOf:
+            - type: 'null'
+            - type: string
+        position:
+          type: integer
+          format: int32
+          description: The position of the role
+        permissions:
+          $ref: '#/components/schemas/PermissionBit'
+        managed:
+          type: boolean
+          description: Is the role managed by an integration or not?
+        mentionable:
+          type: boolean
+          description: Whether the role can be mentioned by anyone or not
+        tags:
+          $ref: '#/components/schemas/RoleTagObject'
+      required:
+        - id
+        - name
+        - color
+        - hoist
+        - position
+        - permissions
+        - managed
+        - mentionable
     MFALevel:
       type: integer
       enum:
@@ -304,6 +396,47 @@ components:
       description: |-
         Current boost level of the guild.
         0 means none, 1 means level 1, 2 means level 2, etc.
+    WelcomeScreenChannelObject:
+      type: object
+      properties:
+        channel_id:
+          $ref: '#/components/schemas/Snowflake'
+        description:
+          type: string
+          description: The description shown for the channel
+        emoji_id:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Snowflake'
+        emoji_name:
+          description: |-
+            The emoji name if custom, return the unicode if standard,
+            or null if emoji is not set
+          oneOf:
+            - type: 'null'
+            - type: string
+      required:
+        - channel_id
+        - description
+        - emoji_id
+        - emoji_name
+    WelcomeScreenGuildObject:
+      type: object
+      properties:
+        description:
+          description: The server description shown in the welcome screen
+          oneOf:
+            - type: 'null'
+            - type: string
+        welcome_channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/WelcomeScreenChannelObject'
+          maxItems: 5
+          description: The channels shown in the welcome screen, up to 5
+      required:
+        - description
+        - welcome_channels
     NSFWLevel:
       type: integer
       enum:
@@ -316,6 +449,162 @@ components:
         The NSFW level of the guild
         0 means default level, 1 means explicit content only,
         2 means safe, 3 means age restricted.
+    PartialUserObject:
+      type: object
+      properties:
+        public_flags:
+          type: integer
+          format: int32
+          description: >-
+            The public flags of the user.
+
+            Learn more about flags here:
+            https://discord.com/developers/docs/resources/user#user-object-user-flags
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        name:
+          type: string
+          description: The user name
+        discriminator:
+          type: string
+          description: The user discriminator (the 4 digits after the "#" sign)
+        avatar:
+          type: string
+          description: The avatar hash of the user
+      required:
+        - public_flags
+        - id
+        - name
+        - discriminator
+    StickerObject:
+      type: object
+      properties:
+        pack_id:
+          $ref: '#/components/schemas/Snowflake'
+        description:
+          description: The sticker description
+          oneOf:
+            - type: 'null'
+            - type: string
+        tags:
+          type: string
+          maxLength: 200
+          description: |-
+            Autocompletion/suggestion tags.
+            This is a comma separated strings (max 200 characters)
+        type:
+          type: integer
+          enum:
+            - 1
+            - 2
+          format: int32
+          description: >-
+            The type of the sticker
+
+            1 means that it's from the official sticker in a pack, part of nitro
+            or purchased stickers.
+
+            2 means that it's from a guild.
+        available:
+          type: boolean
+          description: >-
+            Whether this guild sticker can be used, may be false due to loss of
+            Server Boosts
+        guild_id:
+          $ref: '#/components/schemas/Snowflake'
+        user:
+          $ref: '#/components/schemas/PartialUserObject'
+        sort_value:
+          type: integer
+          format: int32
+          description: The standard sticker's sort order within its pack
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        name:
+          type: string
+          description: The sticker name
+        format_type:
+          type: integer
+          enum:
+            - 1
+            - 2
+            - 3
+          format: int32
+          description: |-
+            The sticker format
+            1 means PNG, 2 means APNG, 3 means Lottie
+      required:
+        - description
+        - tags
+        - type
+        - id
+        - name
+        - format_type
+    GuildEmojiObject:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        name:
+          description: The emoji name (can be null only in reactions emote object)
+          oneOf:
+            - type: 'null'
+            - type: string
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Snowflake'
+          description: Array of role object IDs, contains user that can use this emoji
+        user:
+          $ref: '#/components/schemas/PartialUserObject'
+        require_colons:
+          type: boolean
+          description: Whether this emoji must be wrapped in colons
+        managed:
+          type: boolean
+          description: Whether this emoji is managed by an integration
+        animated:
+          type: boolean
+          description: |-
+            Whether this emoji is animated.
+            If the emote is animated, the hash need to be prefixed by `a_`
+        available:
+          type: boolean
+          description: >-
+            Whether this emoji can be used, may be false due to loss of Server
+            Boosts
+      required:
+        - id
+    GuildFeatures:
+      type: string
+      enum:
+        - ANIMATED_BANNER
+        - ANIMATED_ICON
+        - BANNER
+        - COMMERCE
+        - COMMUNITY
+        - DISCOVERABLE
+        - FEATURABLE
+        - INVITE_SPLASH
+        - MEMBER_VERIFICATION_GATE_ENABLED
+        - MONETIZATION_ENABLED
+        - MORE_EMOJI
+        - MORE_STICKERS
+        - NEWS
+        - PARTNERED
+        - PREVIEW_ENABLED
+        - PRIVATE_THREADS
+        - ROLE_ICONS
+        - SEVEN_DAY_THREAD_ARCHIVE
+        - THREE_DAY_THREAD_ARCHIVE
+        - TICKETED_EVENTS_ENABLED
+        - VANITY_URL
+        - VERIFIED
+        - VIP_REGIONS
+        - WELCOME_SCREEN_ENABLED
+      description: |-
+        Guild features, if the guild have one of this features,
+        that means the guild have it enabled or available.
     GuildGatewayObject:
       type: object
       properties:
@@ -323,11 +612,14 @@ components:
           $ref: '#/components/schemas/ISO8601'
         large:
           type: boolean
+          description: trur if this is considered a large guild
         unavailable:
           type: boolean
+          description: true if this guild is unavailable due to an outage
         member_count:
           type: number
           format: float
+          description: Total number of members in this guild
         voice_states:
           type: array
           items:
@@ -352,29 +644,15 @@ components:
           type: array
           items:
             type: string
-        id:
-          $ref: '#/components/schemas/Snowflake'
-        name:
-          type: string
-        icon:
-          oneOf:
-            - type: 'null'
-            - type: string
         icon_hash:
-          oneOf:
-            - type: 'null'
-            - type: string
-        splash:
-          oneOf:
-            - type: 'null'
-            - type: string
-        discovery_splash:
+          description: The guild icon hash, returned if the guild is a template object
           oneOf:
             - type: 'null'
             - type: string
         owner_id:
           $ref: '#/components/schemas/Snowflake'
         region:
+          description: Voice region ID for the guild (deprecated)
           oneOf:
             - type: 'null'
             - type: string
@@ -385,8 +663,10 @@ components:
         afk_timeout:
           type: number
           format: float
+          description: The AFK timeout before someone is moved to AFK channel (in seconds)
         widget_enabled:
           type: boolean
+          description: Whether is the server widget is enabled
         widget_channel_id:
           oneOf:
             - type: 'null'
@@ -400,15 +680,8 @@ components:
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/Snowflake'
-        emojis:
-          type: array
-          items:
-            type: string
-        features:
-          type: array
-          items:
-            $ref: '#/components/schemas/GuildFeatures'
+            $ref: '#/components/schemas/RoleObject'
+          description: Roles in the guild
         mfa_level:
           $ref: '#/components/schemas/MFALevel'
         application_id:
@@ -426,6 +699,9 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/Snowflake'
         max_presences:
+          description: >-
+            The maximum number of presences for the guild (null is always
+            returned, apart from the largest of guilds)
           oneOf:
             - type: 'null'
             - type: number
@@ -433,15 +709,14 @@ components:
         max_members:
           type: number
           format: float
+          description: The maximum number of members for the guild
         vanity_url_code:
-          oneOf:
-            - type: 'null'
-            - type: string
-        description:
+          description: The vanity invite url code for the guild
           oneOf:
             - type: 'null'
             - type: string
         banner:
+          description: The banner hash
           oneOf:
             - type: 'null'
             - type: string
@@ -450,8 +725,13 @@ components:
         premium_subscription_count:
           type: number
           format: float
+          description: The number of boosts this guild currently has
         preferred_locale:
           type: string
+          description: |-
+            The preferred locale of a Community guild;
+            used in server discovery and notices from Discord;
+            defaults to "en-US"
         public_updates_channel_id:
           oneOf:
             - type: 'null'
@@ -459,26 +739,54 @@ components:
         max_video_channel_users:
           type: number
           format: float
-        approximate_member_count:
-          type: number
-          format: float
-        approximate_presence_count:
-          type: number
-          format: float
+          description: The maximum amount of users in a video channel
         welcome_screen:
-          type: string
+          $ref: '#/components/schemas/WelcomeScreenGuildObject'
         nsfw_level:
           $ref: '#/components/schemas/NSFWLevel'
         stickers:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/StickerObject'
+          description: Custom guild stickers
+        id:
+          $ref: '#/components/schemas/Snowflake'
+        name:
+          type: string
+          description: The Guild name
+        icon:
+          description: The guild icon hash
+          oneOf:
+            - type: 'null'
+            - type: string
+        emojis:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuildEmojiObject'
+          description: Emojis in the guild
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuildFeatures'
+          description: Enabled guild features
+        description:
+          description: The description of a Community guild
+          oneOf:
+            - type: 'null'
+            - type: string
+        splash:
+          description: The splash screen hash
+          oneOf:
+            - type: 'null'
+            - type: string
+        discovery_splash:
+          description: >-
+            The discovery splash hash, only present for guilds with
+            "DISCOVERABLE" feature
+          oneOf:
+            - type: 'null'
+            - type: string
       required:
-        - id
-        - name
-        - icon
-        - splash
-        - discovery_splash
         - owner_id
         - afk_channel_id
         - afk_timeout
@@ -486,25 +794,28 @@ components:
         - default_message_notifications
         - explicit_content_filter
         - roles
-        - emojis
-        - features
         - mfa_level
         - application_id
         - system_channel_id
         - system_channel_flags
         - rules_channel_id
         - vanity_url_code
-        - description
         - banner
         - premium_tier
         - preferred_locale
         - public_updates_channel_id
         - max_video_channel_users
-        - approximate_member_count
-        - approximate_presence_count
         - welcome_screen
         - nsfw_level
         - stickers
+        - id
+        - name
+        - icon
+        - emojis
+        - features
+        - description
+        - splash
+        - discovery_splash
   messages:
     GUILD_CREATE:
       name: GUILD_CREATE

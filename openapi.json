@@ -61,6 +61,464 @@
                 }
             }
         },
+        "/guilds/{guildId}": {
+            "get": {
+                "tags": [
+                    "Guilds"
+                ],
+                "description": "Get a guild. Returns the guild object for the given id.\n\nIf with_counts is set to true, this endpoint will also return\napproximate_member_count and approximate_presence_count for the guild.\n\nhttps://discord.com/developers/docs/resources/guild#get-guild",
+                "operationId": "GetGuild",
+                "parameters": [
+                    {
+                        "name": "guildId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    {
+                        "name": "with_counts",
+                        "in": "query",
+                        "description": "When true, will return approximate member and presence count for the guild",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "false",
+                                "true"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "User-Agent",
+                        "in": "header",
+                        "description": "The user agent of the client. You must follow this format.\nWhere the user agent format is `DiscordBot ($url, $version)`.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "DiscordBot (https://github.com/noaione/discord-openapi, 1.0)"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Requested Guild object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuildHTTPObject"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, you need to provide token to get the guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, your provided token is missing some permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You're trying to fetch an unknown guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Guilds"
+                ],
+                "description": "Modify a guild's settings.\nRequires the `MANAGE_GUILD` permission.\nReturns the updated guild object on success and fires the GUILD_UPDATE Gateway event.\n\nhttps://discord.com/developers/docs/resources/guild#modify-guild",
+                "operationId": "PatchGuildModify",
+                "parameters": [
+                    {
+                        "name": "guildId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    {
+                        "name": "X-Audit-Log-Reason",
+                        "in": "header",
+                        "description": "This endpoint support adding reason to audit log with this header.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/POSTGuildCreation"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The modified guild object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuildPreviewObject"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, you need to provide token to modify the guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, your provided token is missing some permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You're trying to modify an unknown guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Guilds"
+                ],
+                "description": "Delete a guild permanently.\nUser must be the guild owner to delete it.\nFires a GUILD_DELETE gateway event on success.\n\nhttps://discord.com/developers/docs/resources/guild#delete-guild",
+                "operationId": "DeleteGuild",
+                "parameters": [
+                    {
+                        "name": "guildId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    {
+                        "name": "User-Agent",
+                        "in": "header",
+                        "description": "The user agent of the client. You must follow this format.\nWhere the user agent format is `DiscordBot ($url, $version)`.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "DiscordBot (https://github.com/noaione/discord-openapi, 1.0)"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Returns 204 (No content) status"
+                    },
+                    "401": {
+                        "description": "Unauthorized, you need to provide token to delete the guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, your provided token is not the owner auth token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You're trying to delete an unknown guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/guilds/{guildId}/preview": {
+            "get": {
+                "tags": [
+                    "Guilds"
+                ],
+                "description": "Get a guild preview. Returns the guild preview object for the given id.\n\nIf the user is not in the guild, then the guild must be lurkable (it must be Discoverable or have a live public stage).\n\nhttps://discord.com/developers/docs/resources/guild#get-guild-preview",
+                "operationId": "GetGuildPreview",
+                "parameters": [
+                    {
+                        "name": "guildId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    {
+                        "name": "User-Agent",
+                        "in": "header",
+                        "description": "The user agent of the client. You must follow this format.\nWhere the user agent format is `DiscordBot ($url, $version)`.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "DiscordBot (https://github.com/noaione/discord-openapi, 1.0)"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Requested Guild object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuildPreviewObject"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, you need to provide token to get the guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, your provided token is missing some permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You're trying to fetch an unknown guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/guilds/{guildId}/channels": {
+            "get": {
+                "tags": [
+                    "Guilds"
+                ],
+                "description": "Get Guild Channels. Returns a list of channels in the guild.\n\nThis does not include threads.\n\nhttps://discord.com/developers/docs/resources/guild#get-guild-channels",
+                "operationId": "GetGuildChannels",
+                "parameters": [
+                    {
+                        "name": "guildId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    {
+                        "name": "User-Agent",
+                        "in": "header",
+                        "description": "The user agent of the client. You must follow this format.\nWhere the user agent format is `DiscordBot ($url, $version)`.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "DiscordBot (https://github.com/noaione/discord-openapi, 1.0)"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of guild channels object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/GuildChannel"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, you need to provide token to get the guild channels",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, your provided token is missing permission needed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You're trying to get an unknown guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Guilds"
+                ],
+                "description": "Create Guild Channels.\nRequires the MANAGE_CHANNELS permission.\n\nIf setting permission overwrites,\nonly permissions your bot has in the guild can be allowed/denied.\n\nSetting MANAGE_ROLES permission in channels is only possible for guild administrators.\n\nReturns new channel object on success, and fires a CHANNEL_CREATE gateway event.\n\nhttps://discord.com/developers/docs/resources/guild#create-guild-channel",
+                "operationId": "PostGuildChannelCreate",
+                "parameters": [
+                    {
+                        "name": "guildId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        }
+                    },
+                    {
+                        "name": "X-Audit-Log-Reason",
+                        "in": "header",
+                        "description": "This endpoint support adding reason to audit log with this header.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ChannelGuildMessageBody"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The created guild channel",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuildChannel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, you need to provide token to create a guild channels",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, your provided token is missing permission needed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You're trying to create on an unknown guild",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/guilds/{guildId}/audit-logs": {
             "get": {
                 "tags": [
@@ -203,6 +661,10 @@
                 "format": "int32",
                 "description": "The default explicit content filter level of the guild.\n0 is disabled, 1 is members without roles, 2 is everyone."
             },
+            "PermissionBit": {
+                "type": "string",
+                "description": "A permission bit set."
+            },
             "GuildRoleBody": {
                 "type": "object",
                 "properties": {
@@ -232,8 +694,7 @@
                         "description": "The role's unicode emoji as a standard emoji (if the guild has the ROLE_ICONS feature)"
                     },
                     "permissions": {
-                        "type": "string",
-                        "description": "Bitwise value of the enabled/disabled permissions."
+                        "$ref": "#/components/schemas/PermissionBit"
                     },
                     "mentionable": {
                         "type": "boolean",
@@ -262,6 +723,35 @@
             "Snowflake": {
                 "type": "string",
                 "description": "A snowflake or ID for identifying unique object in Discord."
+            },
+            "PermissionsOverwriteObject": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "type": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "format": "int32",
+                        "description": "The overwrite type.\n0 for role, 1 for member"
+                    },
+                    "allow": {
+                        "$ref": "#/components/schemas/PermissionBit"
+                    },
+                    "deny": {
+                        "$ref": "#/components/schemas/PermissionBit"
+                    }
+                },
+                "required": [
+                    "id",
+                    "type",
+                    "allow",
+                    "deny"
+                ]
             },
             "VideoQualityMode": {
                 "type": "integer",
@@ -323,7 +813,7 @@
                     "permission_overwrites": {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "$ref": "#/components/schemas/PermissionsOverwriteObject"
                         },
                         "description": "Explicit permission overwrites for members and roles"
                     },
@@ -402,41 +892,91 @@
                         "type": "number",
                         "format": "float",
                         "description": "This is the combined bitwise value of the system channel flags."
+                    },
+                    "premium_progress_bar_enabled": {
+                        "type": "boolean",
+                        "description": "Whether the guild's boost progress bar should be enabled."
                     }
                 },
                 "required": [
-                    "name"
+                    "name",
+                    "premium_progress_bar_enabled"
                 ]
             },
-            "GuildFeatures": {
-                "type": "string",
-                "enum": [
-                    "ANIMATED_BANNER",
-                    "ANIMATED_ICON",
-                    "BANNER",
-                    "COMMERCE",
-                    "COMMUNITY",
-                    "DISCOVERABLE",
-                    "FEATURABLE",
-                    "INVITE_SPLASH",
-                    "MEMBER_VERIFICATION_GATE_ENABLED",
-                    "MONETIZATION_ENABLED",
-                    "MORE_EMOJI",
-                    "MORE_STICKERS",
-                    "NEWS",
-                    "PARTNERED",
-                    "PREVIEW_ENABLED",
-                    "PRIVATE_THREADS",
-                    "ROLE_ICONS",
-                    "SEVEN_DAY_THREAD_ARCHIVE",
-                    "THREE_DAY_THREAD_ARCHIVE",
-                    "TICKETED_EVENTS_ENABLED",
-                    "VANITY_URL",
-                    "VERIFIED",
-                    "VIP_REGIONS",
-                    "WELCOME_SCREEN_ENABLED"
-                ],
-                "description": "Guild features, if the guild have one of this features,\nthat means the guild have it enabled or available."
+            "RoleTagObject": {
+                "type": "object",
+                "properties": {
+                    "bot_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "integration_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "premium_subscriber": {
+                        "type": "boolean",
+                        "description": "Whether this is the guild's premium subscriber role"
+                    }
+                }
+            },
+            "RoleObject": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The Role name"
+                    },
+                    "color": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Integer representation of the role color, default to 0 (for no color)"
+                    },
+                    "hoist": {
+                        "type": "boolean",
+                        "description": "If this role is pinned in the user listing"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Role icon hash\nGuild must be boosted to level 2 to have this."
+                    },
+                    "unicode_emoji": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Role unicode emoji\nGuild must be boosted to level 2 to have this."
+                    },
+                    "position": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "The position of the role"
+                    },
+                    "permissions": {
+                        "$ref": "#/components/schemas/PermissionBit"
+                    },
+                    "managed": {
+                        "type": "boolean",
+                        "description": "Is the role managed by an integration or not?"
+                    },
+                    "mentionable": {
+                        "type": "boolean",
+                        "description": "Whether the role can be mentioned by anyone or not"
+                    },
+                    "tags": {
+                        "$ref": "#/components/schemas/RoleTagObject"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "color",
+                    "hoist",
+                    "position",
+                    "permissions",
+                    "managed",
+                    "mentionable"
+                ]
             },
             "MFALevel": {
                 "type": "integer",
@@ -469,6 +1009,55 @@
                 "format": "int32",
                 "description": "Current boost level of the guild.\n0 means none, 1 means level 1, 2 means level 2, etc."
             },
+            "WelcomeScreenChannelObject": {
+                "type": "object",
+                "properties": {
+                    "channel_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "The description shown for the channel"
+                    },
+                    "emoji_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "emoji_name": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The emoji name if custom, return the unicode if standard,\nor null if emoji is not set"
+                    }
+                },
+                "required": [
+                    "channel_id",
+                    "description",
+                    "emoji_id",
+                    "emoji_name"
+                ]
+            },
+            "WelcomeScreenGuildObject": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The server description shown in the welcome screen"
+                    },
+                    "welcome_channels": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WelcomeScreenChannelObject"
+                        },
+                        "maxItems": 5,
+                        "description": "The channels shown in the welcome screen, up to 5"
+                    }
+                },
+                "required": [
+                    "description",
+                    "welcome_channels"
+                ]
+            },
             "NSFWLevel": {
                 "type": "integer",
                 "enum": [
@@ -480,43 +1069,198 @@
                 "format": "int32",
                 "description": "The NSFW level of the guild\n0 means default level, 1 means explicit content only,\n2 means safe, 3 means age restricted."
             },
-            "GuildHTTPObject": {
+            "PartialUserObject": {
                 "type": "object",
                 "properties": {
-                    "owner": {
-                        "type": "boolean"
-                    },
-                    "permissions": {
-                        "type": "string"
+                    "public_flags": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "The public flags of the user.\nLearn more about flags here: https://discord.com/developers/docs/resources/user#user-object-user-flags"
                     },
                     "id": {
                         "$ref": "#/components/schemas/Snowflake"
                     },
                     "name": {
-                        "type": "string"
-                    },
-                    "icon": {
                         "type": "string",
-                        "nullable": true
+                        "description": "The user name"
+                    },
+                    "discriminator": {
+                        "type": "string",
+                        "description": "The user discriminator (the 4 digits after the \"#\" sign)"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "description": "The avatar hash of the user"
+                    }
+                },
+                "required": [
+                    "public_flags",
+                    "id",
+                    "name",
+                    "discriminator"
+                ]
+            },
+            "StickerObject": {
+                "type": "object",
+                "properties": {
+                    "pack_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The sticker description"
+                    },
+                    "tags": {
+                        "type": "string",
+                        "maxLength": 200,
+                        "description": "Autocompletion/suggestion tags.\nThis is a comma separated strings (max 200 characters)"
+                    },
+                    "type": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2
+                        ],
+                        "format": "int32",
+                        "description": "The type of the sticker\n1 means that it's from the official sticker in a pack, part of nitro or purchased stickers.\n2 means that it's from a guild."
+                    },
+                    "available": {
+                        "type": "boolean",
+                        "description": "Whether this guild sticker can be used, may be false due to loss of Server Boosts"
+                    },
+                    "guild_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/PartialUserObject"
+                    },
+                    "sort_value": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "The standard sticker's sort order within its pack"
+                    },
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The sticker name"
+                    },
+                    "format_type": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "format": "int32",
+                        "description": "The sticker format\n1 means PNG, 2 means APNG, 3 means Lottie"
+                    }
+                },
+                "required": [
+                    "description",
+                    "tags",
+                    "type",
+                    "id",
+                    "name",
+                    "format_type"
+                ]
+            },
+            "GuildEmojiObject": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "name": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The emoji name (can be null only in reactions emote object)"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Snowflake"
+                        },
+                        "description": "Array of role object IDs, contains user that can use this emoji"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/PartialUserObject"
+                    },
+                    "require_colons": {
+                        "type": "boolean",
+                        "description": "Whether this emoji must be wrapped in colons"
+                    },
+                    "managed": {
+                        "type": "boolean",
+                        "description": "Whether this emoji is managed by an integration"
+                    },
+                    "animated": {
+                        "type": "boolean",
+                        "description": "Whether this emoji is animated.\nIf the emote is animated, the hash need to be prefixed by `a_`"
+                    },
+                    "available": {
+                        "type": "boolean",
+                        "description": "Whether this emoji can be used, may be false due to loss of Server Boosts"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "GuildFeatures": {
+                "type": "string",
+                "enum": [
+                    "ANIMATED_BANNER",
+                    "ANIMATED_ICON",
+                    "BANNER",
+                    "COMMERCE",
+                    "COMMUNITY",
+                    "DISCOVERABLE",
+                    "FEATURABLE",
+                    "INVITE_SPLASH",
+                    "MEMBER_VERIFICATION_GATE_ENABLED",
+                    "MONETIZATION_ENABLED",
+                    "MORE_EMOJI",
+                    "MORE_STICKERS",
+                    "NEWS",
+                    "PARTNERED",
+                    "PREVIEW_ENABLED",
+                    "PRIVATE_THREADS",
+                    "ROLE_ICONS",
+                    "SEVEN_DAY_THREAD_ARCHIVE",
+                    "THREE_DAY_THREAD_ARCHIVE",
+                    "TICKETED_EVENTS_ENABLED",
+                    "VANITY_URL",
+                    "VERIFIED",
+                    "VIP_REGIONS",
+                    "WELCOME_SCREEN_ENABLED"
+                ],
+                "description": "Guild features, if the guild have one of this features,\nthat means the guild have it enabled or available."
+            },
+            "GuildHTTPObject": {
+                "type": "object",
+                "properties": {
+                    "owner": {
+                        "type": "boolean",
+                        "description": "True if the user is the owner of the guild. Only available via API,\nwill return the current user requesting to the API."
+                    },
+                    "permissions": {
+                        "$ref": "#/components/schemas/PermissionBit"
                     },
                     "icon_hash": {
                         "type": "string",
-                        "nullable": true
-                    },
-                    "splash": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "discovery_splash": {
-                        "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "description": "The guild icon hash, returned if the guild is a template object"
                     },
                     "owner_id": {
                         "$ref": "#/components/schemas/Snowflake"
                     },
                     "region": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "description": "Voice region ID for the guild (deprecated)"
                     },
                     "afk_channel_id": {
                         "$ref": "#/components/schemas/Snowflake",
@@ -524,10 +1268,12 @@
                     },
                     "afk_timeout": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "description": "The AFK timeout before someone is moved to AFK channel (in seconds)"
                     },
                     "widget_enabled": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Whether is the server widget is enabled"
                     },
                     "widget_channel_id": {
                         "$ref": "#/components/schemas/Snowflake",
@@ -545,20 +1291,9 @@
                     "roles": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/Snowflake"
-                        }
-                    },
-                    "emojis": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "features": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/GuildFeatures"
-                        }
+                            "$ref": "#/components/schemas/RoleObject"
+                        },
+                        "description": "Roles in the guild"
                     },
                     "mfa_level": {
                         "$ref": "#/components/schemas/MFALevel"
@@ -581,33 +1316,35 @@
                     "max_presences": {
                         "type": "number",
                         "format": "float",
-                        "nullable": true
+                        "nullable": true,
+                        "description": "The maximum number of presences for the guild (null is always returned, apart from the largest of guilds)"
                     },
                     "max_members": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "description": "The maximum number of members for the guild"
                     },
                     "vanity_url_code": {
                         "type": "string",
-                        "nullable": true
-                    },
-                    "description": {
-                        "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "description": "The vanity invite url code for the guild"
                     },
                     "banner": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "description": "The banner hash"
                     },
                     "premium_tier": {
                         "$ref": "#/components/schemas/PremiumTier"
                     },
                     "premium_subscription_count": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "description": "The number of boosts this guild currently has"
                     },
                     "preferred_locale": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The preferred locale of a Community guild;\nused in server discovery and notices from Discord;\ndefaults to \"en-US\""
                     },
                     "public_updates_channel_id": {
                         "$ref": "#/components/schemas/Snowflake",
@@ -615,18 +1352,11 @@
                     },
                     "max_video_channel_users": {
                         "type": "number",
-                        "format": "float"
-                    },
-                    "approximate_member_count": {
-                        "type": "number",
-                        "format": "float"
-                    },
-                    "approximate_presence_count": {
-                        "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "description": "The maximum amount of users in a video channel"
                     },
                     "welcome_screen": {
-                        "type": "string"
+                        "$ref": "#/components/schemas/WelcomeScreenGuildObject"
                     },
                     "nsfw_level": {
                         "$ref": "#/components/schemas/NSFWLevel"
@@ -634,16 +1364,53 @@
                     "stickers": {
                         "type": "array",
                         "items": {
-                            "type": "string"
-                        }
+                            "$ref": "#/components/schemas/StickerObject"
+                        },
+                        "description": "Custom guild stickers"
+                    },
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The Guild name"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The guild icon hash"
+                    },
+                    "emojis": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GuildEmojiObject"
+                        },
+                        "description": "Emojis in the guild"
+                    },
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GuildFeatures"
+                        },
+                        "description": "Enabled guild features"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The description of a Community guild"
+                    },
+                    "splash": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The splash screen hash"
+                    },
+                    "discovery_splash": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The discovery splash hash, only present for guilds with \"DISCOVERABLE\" feature"
                     }
                 },
                 "required": [
-                    "id",
-                    "name",
-                    "icon",
-                    "splash",
-                    "discovery_splash",
                     "owner_id",
                     "afk_channel_id",
                     "afk_timeout",
@@ -651,25 +1418,28 @@
                     "default_message_notifications",
                     "explicit_content_filter",
                     "roles",
-                    "emojis",
-                    "features",
                     "mfa_level",
                     "application_id",
                     "system_channel_id",
                     "system_channel_flags",
                     "rules_channel_id",
                     "vanity_url_code",
-                    "description",
                     "banner",
                     "premium_tier",
                     "preferred_locale",
                     "public_updates_channel_id",
                     "max_video_channel_users",
-                    "approximate_member_count",
-                    "approximate_presence_count",
                     "welcome_screen",
                     "nsfw_level",
-                    "stickers"
+                    "stickers",
+                    "id",
+                    "name",
+                    "icon",
+                    "emojis",
+                    "features",
+                    "description",
+                    "splash",
+                    "discovery_splash"
                 ]
             },
             "ErrorResponse": {
@@ -693,6 +1463,163 @@
                     "code",
                     "errors",
                     "message"
+                ]
+            },
+            "GuildPreviewObject": {
+                "type": "object",
+                "properties": {
+                    "approximate_member_count": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Approximate number of members in this guild, returned if `with_counts` is true in the guilds request"
+                    },
+                    "approximate_presence_count": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Approximate number of non-offline members, returned if `with_counts` is true in the guilds request"
+                    },
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The Guild name"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The guild icon hash"
+                    },
+                    "emojis": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GuildEmojiObject"
+                        },
+                        "description": "Emojis in the guild"
+                    },
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GuildFeatures"
+                        },
+                        "description": "Enabled guild features"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The description of a Community guild"
+                    },
+                    "splash": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The splash screen hash"
+                    },
+                    "discovery_splash": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The discovery splash hash, only present for guilds with \"DISCOVERABLE\" feature"
+                    }
+                },
+                "required": [
+                    "approximate_member_count",
+                    "approximate_presence_count",
+                    "id",
+                    "name",
+                    "icon",
+                    "emojis",
+                    "features",
+                    "description",
+                    "splash",
+                    "discovery_splash"
+                ]
+            },
+            "ISO8601": {
+                "type": "string",
+                "format": "date-time",
+                "description": "An ISO8601 compliant timestamp."
+            },
+            "GuildChannel": {
+                "type": "object",
+                "properties": {
+                    "guild_id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "position": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "The position of the channel in a guild."
+                    },
+                    "topic": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The topic of the channel."
+                    },
+                    "nsfw": {
+                        "type": "boolean",
+                        "description": "Is the channel NSFW-restricted or not."
+                    },
+                    "rate_limit_per_user": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Slowmode of the channel."
+                    },
+                    "bitrate": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "The bitrate of the voice/stage channel."
+                    },
+                    "user_limit": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "The user limit of the voice channel"
+                    },
+                    "permission_overwrites": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PermissionsOverwriteObject"
+                        },
+                        "description": "Explicit permission overwrites for members and roles"
+                    },
+                    "parent_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "rtc_region": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Voice region id for the voice channel, automatic when set to null."
+                    },
+                    "video_quality_mode": {
+                        "$ref": "#/components/schemas/VideoQualityMode"
+                    },
+                    "default_auto_archive_duration": {
+                        "$ref": "#/components/schemas/ThreadArchive"
+                    },
+                    "last_message_id": {
+                        "$ref": "#/components/schemas/Snowflake",
+                        "nullable": true
+                    },
+                    "last_pin_timestamp": {
+                        "$ref": "#/components/schemas/ISO8601",
+                        "nullable": true
+                    },
+                    "permissions": {
+                        "$ref": "#/components/schemas/PermissionBit"
+                    },
+                    "id": {
+                        "$ref": "#/components/schemas/Snowflake"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The channel name."
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/ChannelType"
+                    }
+                },
+                "required": [
+                    "id",
+                    "type"
                 ]
             },
             "PartialRoleObject": {
