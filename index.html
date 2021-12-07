@@ -88,12 +88,9 @@
         </rapi-doc>
 
         <script>
-            window.addEventListener("DOMContentLoaded", (event) => {
-                console.log("Loaded");
+            function registerRapiEvent() {
                 const rapidocElement = document.getElementById("openapi-doc");
-                console.log("Loaded", rapidocElement);
                 rapidocElement.addEventListener("spec-loaded", (e) => {
-                    console.log("Spec ready");
                     const overViewSlot = document.querySelectorAll("[slot=overview]");
                     overViewSlot.forEach((slot) => {
                         slot.className = "";
@@ -103,7 +100,15 @@
                         slot.className = "";
                     });
                 })
-            })
+            }
+            if (document.readyState !== "loading") {
+                registerRapiEvent();
+            } else {
+                window.addEventListener("DOMContentLoaded", (event) => {
+                    console.info("DOMContentLoaded");
+                    registerRapiEvent();
+                });
+            }
         </script>
     </body>
 </html>
